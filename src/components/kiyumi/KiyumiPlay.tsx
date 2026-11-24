@@ -1,14 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   CheckCircle2,
-  Eye,
   EyeOff,
   Pause,
   Play,
-  RotateCw,
   SkipForward,
   Smartphone,
-  X,
 } from 'lucide-react';
 import { KiyumiMode, KiyumiRoundWord } from '../../types';
 import { sound } from '../../lib/audio';
@@ -54,7 +51,6 @@ export function KiyumiPlay({
   const score = results.filter((r) => r.status === 'correct').length;
   const isUrgent = timeLeft <= 5 && timeLeft > 0;
 
-  // Precise 1-second interval timer
   useEffect(() => {
     if (paused || finishedRef.current) return;
 
@@ -114,22 +110,17 @@ export function KiyumiPlay({
     onTiltUp: () => recordAction('passed'),
   });
 
-  // Circular SVG timer math
-  const radius = 34;
-  const circumference = 2 * Math.PI * radius;
   const progress = Math.max(0, timeLeft / ROUND_SECONDS);
-  const strokeDashoffset = circumference * (1 - progress);
 
-  // Adaptive font sizing so long words never clip horizontally
   const wordSizeClass =
     currentWord.length > 18
       ? 'text-3xl sm:text-5xl'
       : currentWord.length > 12
-        ? 'text-4xl sm:text-5xl'
+        ? 'text-4xl sm:text-6xl'
         : 'text-5xl sm:text-6xl';
 
   return (
-    <div className="fixed inset-0 z-30 flex flex-col justify-between overflow-hidden bg-[#07131D] px-4 pt-safe pb-safe">
+    <div className="fixed inset-0 z-30 flex h-[100dvh] flex-col bg-[#07131D] px-3.5 pt-safe pb-safe">
       {/* Full-screen feedback flash overlay */}
       {feedback && (
         <div
@@ -150,195 +141,153 @@ export function KiyumiPlay({
         </div>
       )}
 
-      {/* Top HUD Bar */}
-      <div className="mx-auto flex w-full max-w-2xl items-center justify-between gap-2 pt-2">
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2 rounded-2xl border border-[#00E5C4]/35 bg-[#0B1B28] px-3.5 py-2">
-            <CheckCircle2 className="h-4 w-4 text-[#00E5C4]" />
-            <span className="font-display text-lg font-extrabold text-[#00E5C4]">{score}</span>
-          </div>
-          <div className="hidden rounded-2xl border border-[#F3FAFA]/10 bg-[#0B1B28] px-3 py-2 text-xs font-semibold text-[#19D8F2] sm:block">
-            {deckName}
-          </div>
-        </div>
-
-        {/* Circular 30s Timer */}
-        <div
-          className={`relative flex h-20 w-20 items-center justify-center rounded-full bg-[#0B1B28] ${
-            isUrgent ? 'animate-urgent-pulse' : ''
-          }`}
-        >
-          <svg className="h-20 w-20 -rotate-90" viewBox="0 0 80 80" aria-hidden="true">
-            <circle
-              cx="40"
-              cy="40"
-              r={radius}
-              fill="none"
-              stroke="rgba(243,250,250,0.12)"
-              strokeWidth="6"
-            />
-            <circle
-              cx="40"
-              cy="40"
-              r={radius}
-              fill="none"
-              stroke={isUrgent ? '#F97316' : '#19D8F2'}
-              strokeWidth="6"
-              strokeLinecap="round"
-              strokeDasharray={circumference}
-              strokeDashoffset={strokeDashoffset}
-              className="transition-[stroke-dashoffset] duration-500 ease-linear"
-            />
-          </svg>
-          <span
-            className={`font-display absolute text-2xl font-extrabold tabular-nums ${
-              isUrgent ? 'text-[#F97316]' : 'text-[#19D8F2]'
-            }`}
-          >
-            {timeLeft}
+      {/* Minimal Top Strip: Score + Timer + Single Pause Button */}
+      <div className="mx-auto flex w-full max-w-2xl items-center justify-between gap-2 py-2">
+        <div className="flex items-center gap-1.5 rounded-full border border-[#00E5C4]/35 bg-[#0B1B28] px-3.5 py-1.5">
+          <CheckCircle2 className="h-4 w-4 text-[#00E5C4]" />
+          <span className="font-display text-base font-extrabold tabular-nums text-[#00E5C4]">
+            {score}
           </span>
         </div>
 
-        {/* Pause / Exit controls */}
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => {
-              sound.tap();
-              setPaused((p) => !p);
-            }}
-            aria-label={paused ? 'Retomar' : 'Pausar'}
-            className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#F3FAFA]/15 bg-[#0B1B28] text-[#F3FAFA] transition active:scale-95"
-          >
-            {paused ? <Play className="h-5 w-5 text-[#00E5C4]" /> : <Pause className="h-5 w-5" />}
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              sound.tap();
-              setPaused(true);
-              onAbort();
-            }}
-            aria-label="Sair da ronda"
-            className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#F3FAFA]/15 bg-[#0B1B28] text-[#F3FAFA]/80 transition active:scale-95 hover:border-[#F97316]/60 hover:text-[#F97316]"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
-      </div>
-
-      {/* Horizontal Progress Bar for quick distance reading */}
-      <div className="mx-auto mt-2.5 h-1.5 w-full max-w-2xl overflow-hidden rounded-full bg-[#0B1B28]">
         <div
-          className={`h-full rounded-full transition-all duration-500 ease-linear ${
-            isUrgent ? 'bg-[#F97316]' : 'bg-[#19D8F2]'
+          className={`flex items-center gap-2 rounded-full border-2 bg-[#0B1B28] px-4 py-1 ${
+            isUrgent
+              ? 'animate-urgent-pulse border-[#F97316] text-[#F97316]'
+              : 'border-[#19D8F2]/50 text-[#19D8F2]'
           }`}
-          style={{ width: `${progress * 100}%` }}
-        />
+        >
+          <span className="font-display text-2xl font-extrabold tabular-nums leading-none">
+            {timeLeft}s
+          </span>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => {
+            sound.tap();
+            setPaused((p) => !p);
+          }}
+          aria-label={paused ? 'Retomar' : 'Pausar'}
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-[#F3FAFA]/15 bg-[#0B1B28] text-[#F3FAFA] transition active:scale-95"
+        >
+          {paused ? <Play className="h-4 w-4 text-[#00E5C4]" /> : <Pause className="h-4 w-4" />}
+        </button>
       </div>
 
-      {/* Center Stage: Giant Word Card */}
-      <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center py-4">
-        {/* Mode / Sensor Status Badge */}
-        <div className="mb-3 flex flex-wrap items-center justify-center gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-[#19D8F2]/30 bg-[#0B1B28] px-3 py-1 text-xs font-semibold text-[#19D8F2]">
-            {mode === 'testa' ? (
-              <>
-                <Smartphone className="h-3.5 w-3.5 rotate-90" />
-                {tiltState === 'active'
-                  ? 'Sensor ativo · Inclina p/ baixo (+1) ou cima (Passar)'
-                  : 'Modo Testa · Usa os botões grandes abaixo'}
-              </>
+      {/* GIANT OPEN CARD: Occupies most of the mobile screen; ALL text stays INSIDE the card */}
+      <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col py-1.5">
+        <div
+          onClick={() => {
+            if (mode === 'palco' && !paused) {
+              sound.tap();
+              setHideWord((h) => !h);
+            }
+          }}
+          className={`relative flex flex-1 flex-col justify-between overflow-hidden rounded-[2rem] border-2 bg-[#0B1B28] px-6 py-6 text-center shadow-2xl transition-colors ${
+            isUrgent ? 'border-[#F97316]' : 'border-[#00E5C4]/45'
+          } ${mode === 'palco' && !paused ? 'cursor-pointer' : ''}`}
+        >
+          {/* Thin Timer Progress Bar integrated at the very top of the card */}
+          <div className="absolute left-0 right-0 top-0 h-1.5 bg-[#07131D]">
+            <div
+              className={`h-full transition-all duration-500 ease-linear ${
+                isUrgent ? 'bg-[#F97316]' : 'bg-[#19D8F2]'
+              }`}
+              style={{ width: `${progress * 100}%` }}
+            />
+          </div>
+
+          {/* Inside Card Header */}
+          <div className="pt-1">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#07131D] px-3.5 py-1 text-xs font-bold text-[#19D8F2]">
+              {mode === 'testa' && <Smartphone className="h-3.5 w-3.5 rotate-90" />}
+              {deckName} · {mode === 'testa' ? 'Modo Testa' : 'Modo Palco'}
+            </span>
+          </div>
+
+          {/* Inside Card Main Content */}
+          <div className="my-auto flex flex-col items-center justify-center py-4">
+            {paused ? (
+              <div className="space-y-4">
+                <p className="font-display text-3xl font-extrabold text-[#19D8F2]">EM PAUSA</p>
+                <div className="flex flex-col gap-2.5 sm:flex-row">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      sound.tap();
+                      setPaused(false);
+                    }}
+                    className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-2xl bg-[#00E5C4] px-6 font-display text-base font-extrabold text-[#07131D]"
+                  >
+                    <Play className="h-5 w-5 fill-current" />
+                    Retomar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      sound.tap();
+                      onAbort();
+                    }}
+                    className="inline-flex min-h-[48px] items-center justify-center rounded-2xl border border-[#F97316]/50 bg-[#07131D] px-6 text-sm font-bold text-[#F97316]"
+                  >
+                    Sair da Ronda
+                  </button>
+                </div>
+              </div>
+            ) : hideWord && mode === 'palco' ? (
+              <div className="space-y-2">
+                <EyeOff className="mx-auto h-10 w-10 text-[#19D8F2]/70" />
+                <p className="font-display text-2xl font-extrabold text-[#F3FAFA]/65">
+                  Palavra escondida
+                </p>
+                <p className="text-xs text-[#19D8F2]">Toca na carta para revelar</p>
+              </div>
             ) : (
-              <>Modo Palco · {deckName}</>
-            )}
-          </span>
-        </div>
-
-        {/* Main Word Surface */}
-        <div
-          className={`relative flex min-h-[180px] w-full flex-col items-center justify-center rounded-3xl border-2 bg-[#0B1B28] px-6 py-8 text-center shadow-2xl transition-colors sm:min-h-[210px] ${
-            isUrgent ? 'border-[#F97316]/75' : 'border-[#00E5C4]/35'
-          }`}
-        >
-          {paused ? (
-            <div className="space-y-3">
-              <p className="font-display text-3xl font-extrabold text-[#19D8F2]">EM PAUSA</p>
-              <button
-                type="button"
-                onClick={() => {
-                  sound.tap();
-                  setPaused(false);
-                }}
-                className="inline-flex min-h-[48px] items-center gap-2 rounded-2xl bg-[#00E5C4] px-6 font-display text-base font-extrabold text-[#07131D]"
+              <h2
+                key={currentWord}
+                className={`animate-pop-in font-display break-words font-extrabold leading-tight tracking-tight text-[#F3FAFA] ${wordSizeClass}`}
               >
-                <Play className="h-5 w-5 fill-current" />
-                Retomar Ronda
-              </button>
-            </div>
-          ) : hideWord && mode === 'palco' ? (
-            <div className="space-y-2">
-              <p className="font-display text-2xl font-extrabold text-[#F3FAFA]/50">
-                Palavra oculta
-              </p>
-              <p className="text-xs text-[#19D8F2]">Toca em &quot;Mostrar&quot; para espreitar</p>
-            </div>
-          ) : (
-            <h2
-              key={currentWord}
-              className={`animate-pop-in font-display break-words font-extrabold leading-tight tracking-tight text-[#F3FAFA] ${wordSizeClass}`}
-            >
-              {currentWord}
-            </h2>
-          )}
+                {currentWord}
+              </h2>
+            )}
+          </div>
 
-          {mode === 'palco' && !paused && (
-            <button
-              type="button"
-              onClick={() => {
-                sound.tap();
-                setHideWord((h) => !h);
-              }}
-              className="mt-5 inline-flex min-h-[40px] items-center gap-1.5 rounded-full border border-[#F3FAFA]/15 bg-[#07131D] px-3.5 py-1.5 text-xs font-semibold text-[#F3FAFA]/80 transition active:scale-95"
-            >
-              {hideWord ? <Eye className="h-3.5 w-3.5 text-[#00E5C4]" /> : <EyeOff className="h-3.5 w-3.5 text-[#19D8F2]" />}
-              {hideWord ? 'Mostrar palavra' : 'Esconder palavra'}
-            </button>
-          )}
+          {/* Inside Card Footer Hint */}
+          <div className="text-xs font-medium text-[#F3FAFA]/60">
+            {paused
+              ? 'Cronómetro parado'
+              : mode === 'testa'
+                ? tiltState === 'active'
+                  ? 'Inclina para baixo (+1) ou para cima (Passar)'
+                  : 'Segura na testa · Usa os dois botões abaixo'
+                : 'Toca na carta para esconder ou mostrar a palavra'}
+          </div>
         </div>
-
-        {mode === 'testa' && tiltState === 'active' && (
-          <p className="mt-2.5 flex items-center gap-1.5 text-[11px] font-medium text-[#F3FAFA]/55">
-            <RotateCw className="h-3.5 w-3.5 text-[#19D8F2]" />
-            Inclinar para baixo = Acertou · Para cima = Passar
-          </p>
-        )}
       </div>
 
-      {/* Bottom 35% Thumb-Zone Large Tactile Controls (Fallback + Primary) */}
-      <div className="mx-auto grid w-full max-w-2xl grid-cols-2 gap-3 pb-2">
+      {/* Only 2 Clean Thumb-Zone Buttons */}
+      <div className="mx-auto grid w-full max-w-2xl grid-cols-2 gap-3 pb-2 pt-2">
         <button
           type="button"
           disabled={paused}
           onClick={() => recordAction('passed')}
-          className="flex min-h-[84px] flex-col items-center justify-center gap-1 rounded-3xl border-2 border-[#F97316] bg-[#0B1B28] px-4 py-4 text-[#F97316] transition active:scale-[0.97] active:bg-[#F97316] active:text-[#07131D] disabled:opacity-40 sm:min-h-[96px]"
+          className="flex min-h-[68px] items-center justify-center gap-2 rounded-2xl border-2 border-[#F97316] bg-[#0B1B28] px-4 font-display text-base font-extrabold uppercase tracking-wide text-[#F97316] transition active:scale-[0.97] active:bg-[#F97316] active:text-[#07131D] disabled:opacity-40 sm:min-h-[76px]"
         >
-          <SkipForward className="h-7 w-7" />
-          <span className="font-display text-lg font-extrabold uppercase tracking-wide">
-            Passar
-          </span>
+          <SkipForward className="h-5 w-5" />
+          Passar
         </button>
 
         <button
           type="button"
           disabled={paused}
           onClick={() => recordAction('correct')}
-          className="flex min-h-[84px] flex-col items-center justify-center gap-1 rounded-3xl border-2 border-[#00E5C4] bg-[#00E5C4] px-4 py-4 text-[#07131D] shadow-[0_8px_28px_rgba(0,229,196,0.28)] transition active:scale-[0.97] disabled:opacity-40 sm:min-h-[96px]"
+          className="flex min-h-[68px] items-center justify-center gap-2 rounded-2xl border-2 border-[#00E5C4] bg-[#00E5C4] px-4 font-display text-base font-extrabold uppercase tracking-wide text-[#07131D] shadow-[0_8px_28px_rgba(0,229,196,0.28)] transition active:scale-[0.97] disabled:opacity-40 sm:min-h-[76px]"
         >
-          <CheckCircle2 className="h-7 w-7 stroke-[2.5]" />
-          <span className="font-display text-lg font-extrabold uppercase tracking-wide">
-            Acertou (+1)
-          </span>
+          <CheckCircle2 className="h-5 w-5 stroke-[2.5]" />
+          Acertou +1
         </button>
       </div>
     </div>

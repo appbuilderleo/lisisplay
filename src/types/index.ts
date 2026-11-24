@@ -1,6 +1,6 @@
 export type GameId = 'kiyumi' | 'impostor' | 'zoe';
 
-export type AppView = 'hub' | GameId;
+export type AppView = 'splash' | 'hub' | GameId;
 
 export type RulesTab = 'geral' | GameId;
 

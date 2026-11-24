@@ -26,7 +26,7 @@ export function KiyumiSummary({
   const isNewRecord = record.score > 0 && record.score >= bestScore && record.roundNumber > 1;
 
   return (
-    <div className="mx-auto flex min-h-[calc(100dvh-70px)] w-full max-w-lg flex-col justify-between px-4 pb-44 pt-4">
+    <div className="mx-auto flex min-h-[calc(100dvh-70px)] w-full max-w-lg flex-col justify-between px-4 pb-28 pt-4">
       <div className="space-y-4">
         {/* Big Score Banner */}
         <section className="animate-pop-in relative overflow-hidden rounded-3xl border-2 border-[#00E5C4]/50 bg-[#0B1B28] p-6 text-center">
@@ -125,31 +125,31 @@ export function KiyumiSummary({
         </section>
       </div>
 
-      {/* Fixed Thumb-Zone Actions */}
+      {/* Fixed Thumb-Zone Compact Row */}
       <div className="fixed bottom-0 left-0 right-0 z-20 border-t border-[#F3FAFA]/10 bg-[#07131D]/95 px-4 pt-3 pb-safe backdrop-blur-md">
-        <div className="mx-auto max-w-lg space-y-2.5">
-          <button
-            type="button"
-            onClick={() => {
-              sound.tap();
-              onNewRound();
-            }}
-            className="flex min-h-[56px] w-full items-center justify-center gap-2.5 rounded-2xl bg-[#00E5C4] px-6 font-display text-base font-extrabold text-[#07131D] shadow-[0_8px_28px_rgba(0,229,196,0.28)] transition active:scale-[0.98]"
-          >
-            <RefreshCw className="h-5 w-5" />
-            Passar Celular e Nova Ronda
-          </button>
-
+        <div className="mx-auto flex max-w-lg items-center gap-3">
           <button
             type="button"
             onClick={() => {
               sound.tap();
               onChangeSetup();
             }}
-            className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-2xl border border-[#F3FAFA]/15 bg-[#0B1B28] px-4 text-sm font-semibold text-[#F3FAFA] transition active:scale-[0.98]"
+            aria-label="Trocar Baralho ou Modo"
+            className="flex h-[56px] w-[56px] shrink-0 items-center justify-center rounded-2xl border border-[#F3FAFA]/15 bg-[#0B1B28] text-[#19D8F2] transition active:scale-[0.98]"
           >
-            <Settings2 className="h-4 w-4 text-[#19D8F2]" />
-            Trocar Baralho ou Modo
+            <Settings2 className="h-5 w-5" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              sound.tap();
+              onNewRound();
+            }}
+            className="flex min-h-[56px] flex-1 items-center justify-center gap-2 rounded-2xl bg-[#00E5C4] px-5 font-display text-base font-extrabold text-[#07131D] shadow-[0_8px_28px_rgba(0,229,196,0.28)] transition active:scale-[0.98]"
+          >
+            <RefreshCw className="h-5 w-5" />
+            Passar Celular e Nova Ronda
           </button>
         </div>
       </div>

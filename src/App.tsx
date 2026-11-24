@@ -5,6 +5,7 @@ import { loadSoundPreference, saveSoundPreference } from './lib/storage';
 import { Header } from './components/ui/Header';
 import { RulesModal } from './components/ui/RulesModal';
 import { ConfirmModal } from './components/ui/ConfirmModal';
+import { SplashScreen } from './components/splash/SplashScreen';
 import { HubScreen } from './components/hub/HubScreen';
 import { KiyumiGame } from './components/kiyumi/KiyumiGame';
 import { ImpostorGame } from './components/impostor/ImpostorGame';
@@ -17,7 +18,7 @@ const GAME_META: Record<GameId, { title: string; subtitle: string }> = {
 };
 
 export function App() {
-  const [view, setView] = useState<AppView>('hub');
+  const [view, setView] = useState<AppView>('splash');
   const [soundEnabled, setSoundEnabled] = useState<boolean>(() => loadSoundPreference());
   const [rulesOpen, setRulesOpen] = useState(false);
   const [confirmDialog, setConfirmDialog] = useState<ConfirmDialogState | null>(null);
@@ -62,7 +63,7 @@ export function App() {
       requestConfirm({
         title: 'Sair da partida de O Impostor?',
         message: 'Os papéis secretos e o progresso desta ronda serão perdidos.',
-        confirmLabel: 'Sair para o Hub',
+        confirmLabel: 'Sair para o Menu',
         onConfirm: () => {
           setImpostorMatchActive(false);
           setView('hub');
@@ -72,6 +73,10 @@ export function App() {
     }
     setView('hub');
   };
+
+  if (view === 'splash') {
+    return <SplashScreen onEnter={() => setView('hub')} />;
+  }
 
   const rulesInitialTab: RulesTab = view === 'hub' ? 'geral' : view;
   const activeMeta = view !== 'hub' ? GAME_META[view] : null;

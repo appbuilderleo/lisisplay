@@ -47,6 +47,16 @@ export function ImpostorDebate({ players, match, onGoToVote }: ImpostorDebatePro
     return () => window.clearInterval(timer);
   }, [running, secondsLeft]);
 
+  const handleToggleTimer = () => {
+    sound.tap();
+    if (isFinished) {
+      setSecondsLeft(60);
+      setRunning(true);
+    } else {
+      setRunning((r) => !r);
+    }
+  };
+
   const handleAdd30 = () => {
     sound.tap();
     setSecondsLeft((s) => s + 30);
@@ -54,97 +64,93 @@ export function ImpostorDebate({ players, match, onGoToVote }: ImpostorDebatePro
   };
 
   return (
-    <div className="mx-auto flex min-h-[calc(100dvh-70px)] w-full max-w-lg flex-col justify-between px-4 pb-8 pt-5">
-      <div className="space-y-4">
-        {/* First Speaker Highlight */}
-        <section className="animate-pop-in rounded-3xl border-2 border-[#19D8F2]/45 bg-[#0B1B28] p-5 text-center">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#19D8F2]/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#19D8F2]">
+    <div className="mx-auto flex h-[calc(100dvh-68px)] w-full max-w-lg flex-col px-3.5 pb-safe pt-3">
+      {/* SINGLE UNIFIED GIANT CARD containing speaker, rule, and interactive clock */}
+      <div
+        className={`animate-pop-in flex flex-1 flex-col justify-between rounded-[2rem] border-2 bg-[#0B1B28] px-6 py-6 text-center shadow-2xl transition-colors ${
+          isUrgent || isFinished ? 'border-[#F97316]' : 'border-[#19D8F2]/40'
+        }`}
+      >
+        {/* Inside Card Top Pills */}
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#07131D] px-3 py-1 text-xs font-bold text-[#19D8F2]">
             <MessageSquare className="h-3.5 w-3.5" />
-            Ronda de Pistas & Debate
+            {match.categoryName}
           </span>
+          <span className="rounded-full bg-[#07131D] px-3 py-1 text-xs font-bold text-[#F97316]">
+            {match.impostorIds.length}{' '}
+            {match.impostorIds.length === 1 ? 'Impostor' : 'Impostores'}
+          </span>
+        </div>
 
-          <p className="mt-4 text-xs font-semibold uppercase tracking-widest text-[#F3FAFA]/65">
-            Quem dá a primeira pista
-          </p>
-          <h2 className="font-display mt-1 text-3xl font-extrabold text-[#00E5C4] sm:text-4xl">
-            {firstSpeaker.name}
-          </h2>
-          <p className="mt-2.5 text-xs leading-relaxed text-[#F3FAFA]/80">
-            Em sentido horário, cada jogador diz em voz alta{' '}
-            <strong className="text-[#F3FAFA]">apenas 1 palavra-pista</strong> ligada ao tema.
-            Depois debatam quem está a mentir!
-          </p>
-
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-xs font-bold">
-            <span className="rounded-full bg-[#07131D] px-3 py-1 text-[#19D8F2]">
-              Baralho: {match.categoryName}
-            </span>
-            <span className="rounded-full bg-[#07131D] px-3 py-1 text-[#F97316]">
-              {match.impostorIds.length}{' '}
-              {match.impostorIds.length === 1 ? 'Impostor na roda' : 'Impostores na roda'}
-            </span>
-          </div>
-        </section>
-
-        {/* Debate Timer Card */}
-        <section
-          className={`rounded-3xl border-2 bg-[#0B1B28] p-6 text-center transition-colors ${
-            isUrgent || isFinished ? 'border-[#F97316]' : 'border-[#F3FAFA]/12'
-          }`}
-        >
-          <p className="text-xs font-bold uppercase tracking-widest text-[#F3FAFA]/60">
-            {isFinished ? 'Tempo de Debate Esgotado!' : 'Cronómetro de Debate'}
-          </p>
-
-          <div
-            className={`font-display mt-2 text-6xl font-extrabold tabular-nums tracking-tight sm:text-7xl ${
-              isUrgent || isFinished ? 'text-[#F97316]' : 'text-[#19D8F2]'
-            }`}
-          >
-            {formatClock(secondsLeft)}
+        {/* Inside Card Center: First Speaker + Debate Clock */}
+        <div className="my-auto flex flex-col items-center space-y-6 py-4">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#F3FAFA]/60">
+              Começa a dar a primeira pista
+            </p>
+            <h2 className="font-display mt-1.5 text-4xl font-extrabold text-[#00E5C4] sm:text-5xl">
+              {firstSpeaker.name}
+            </h2>
           </div>
 
-          <div className="mt-5 grid grid-cols-2 gap-3">
-            <button
-              type="button"
-              onClick={() => {
-                sound.tap();
-                if (isFinished) {
-                  setSecondsLeft(60);
-                  setRunning(true);
-                } else {
-                  setRunning((r) => !r);
-                }
-              }}
-              className="flex min-h-[52px] items-center justify-center gap-2 rounded-2xl border border-[#F3FAFA]/15 bg-[#07131D] px-4 text-sm font-bold text-[#F3FAFA] transition active:scale-[0.98]"
-            >
-              {running && !isFinished ? (
-                <>
-                  <Pause className="h-4 w-4 text-[#19D8F2]" />
-                  Pausar
-                </>
-              ) : (
-                <>
-                  <Play className="h-4 w-4 text-[#00E5C4]" />
-                  {isFinished ? 'Mais 1:00' : 'Retomar'}
-                </>
-              )}
-            </button>
+          {/* Interactive Clock inside the card */}
+          <div className="w-full rounded-3xl border border-[#F3FAFA]/10 bg-[#07131D]/85 px-5 py-5">
+            <p className="text-[11px] font-bold uppercase tracking-widest text-[#F3FAFA]/55">
+              {isFinished ? 'Tempo esgotado!' : running ? 'Tempo de debate' : 'Debate em pausa'}
+            </p>
 
             <button
               type="button"
-              onClick={handleAdd30}
-              className="flex min-h-[52px] items-center justify-center gap-1.5 rounded-2xl border border-[#19D8F2]/35 bg-[#07131D] px-4 text-sm font-bold text-[#19D8F2] transition active:scale-[0.98]"
+              onClick={handleToggleTimer}
+              aria-label={running ? 'Pausar cronómetro' : 'Retomar cronómetro'}
+              className={`font-display mt-1 inline-flex items-center gap-3 text-6xl font-extrabold tabular-nums tracking-tight transition active:scale-95 sm:text-7xl ${
+                isUrgent || isFinished ? 'text-[#F97316]' : 'text-[#19D8F2]'
+              }`}
             >
-              <Plus className="h-4 w-4" />
-              30 segundos
+              <span>{formatClock(secondsLeft)}</span>
             </button>
+
+            <div className="mt-3 flex items-center justify-center gap-2.5">
+              <button
+                type="button"
+                onClick={handleToggleTimer}
+                className="inline-flex min-h-[40px] items-center gap-1.5 rounded-full border border-[#F3FAFA]/15 bg-[#0B1B28] px-4 text-xs font-bold text-[#F3FAFA] transition active:scale-95"
+              >
+                {running && !isFinished ? (
+                  <>
+                    <Pause className="h-3.5 w-3.5 text-[#19D8F2]" />
+                    Pausar
+                  </>
+                ) : (
+                  <>
+                    <Play className="h-3.5 w-3.5 text-[#00E5C4]" />
+                    {isFinished ? '+1:00' : 'Retomar'}
+                  </>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={handleAdd30}
+                className="inline-flex min-h-[40px] items-center gap-1 rounded-full border border-[#19D8F2]/35 bg-[#0B1B28] px-4 text-xs font-bold text-[#19D8F2] transition active:scale-95"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                30s
+              </button>
+            </div>
           </div>
-        </section>
+        </div>
+
+        {/* Inside Card Footer Rule */}
+        <div className="rounded-2xl bg-[#07131D]/85 px-4 py-2.5 text-xs leading-relaxed text-[#F3FAFA]/75">
+          Sentido horário: cada jogador diz <strong className="text-[#F3FAFA]">1 palavra-pista</strong>{' '}
+          e depois debatem quem é o Impostor.
+        </div>
       </div>
 
-      {/* Thumb-Zone Bottom CTA */}
-      <div className="mt-6 pb-safe">
+      {/* Single Primary Bottom Button */}
+      <div className="py-3">
         <button
           type="button"
           onClick={() => {
