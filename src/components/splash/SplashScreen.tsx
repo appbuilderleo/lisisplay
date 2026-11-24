@@ -13,7 +13,7 @@ export function SplashScreen({ onEnter }: SplashScreenProps) {
   };
 
   return (
-    <div className="relative flex min-h-[100dvh] w-full flex-col justify-between overflow-hidden bg-[#07131D]">
+    <div className="relative flex min-h-[100dvh] w-full flex-col justify-between overflow-x-clip bg-[#07131D]">
       {/* Full-bleed atmospheric background photo */}
       <div className="pointer-events-none absolute inset-0">
         <img

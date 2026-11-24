@@ -50,10 +50,10 @@ export function ImpostorResult({
         : `${accusedPlayer.name} era INOCENTE! O verdadeiro Impostor escapou.`;
 
   return (
-    <div className="mx-auto flex h-[calc(100dvh-68px)] w-full max-w-lg flex-col px-3.5 pb-safe pt-3">
+    <div className="mx-auto flex min-h-[calc(100dvh-68px)] w-full max-w-lg flex-col px-3.5 pb-safe pt-3">
       {/* Single Unified Giant Result Card */}
       <div
-        className={`animate-pop-in flex flex-1 flex-col justify-between rounded-[2rem] border-2 bg-[#0B1B28] px-6 py-6 text-center shadow-2xl ${
+        className={`animate-pop-in flex min-h-[340px] flex-1 flex-col justify-between rounded-[2rem] border-2 bg-[#0B1B28] px-6 py-6 text-center shadow-2xl ${
           citizensWon
             ? 'border-[#00E5C4] shadow-[0_0_32px_rgba(0,229,196,0.18)]'
             : 'border-[#F97316] shadow-[0_0_32px_rgba(249,115,22,0.2)]'

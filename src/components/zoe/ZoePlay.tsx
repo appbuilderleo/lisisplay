@@ -67,8 +67,8 @@ export function ZoePlay({
 
   if (isCompleted) {
     return (
-      <div className="mx-auto flex h-[calc(100dvh-68px)] w-full max-w-lg flex-col px-4 pb-safe pt-3">
-        <div className="animate-pop-in flex flex-1 flex-col items-center justify-center rounded-[2rem] border-2 border-[#00E5C4] bg-[#0B1B28] px-6 py-8 text-center">
+      <div className="mx-auto flex min-h-[calc(100dvh-68px)] w-full max-w-lg flex-col px-4 pb-safe pt-3">
+        <div className="animate-pop-in flex min-h-[300px] flex-1 flex-col items-center justify-center rounded-[2rem] border-2 border-[#00E5C4] bg-[#0B1B28] px-6 py-8 text-center">
           <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-[#00E5C4]/15 text-[#00E5C4]">
             <Sparkles className="h-9 w-9" />
           </div>
@@ -106,10 +106,10 @@ export function ZoePlay({
   }
 
   return (
-    <div className="mx-auto flex h-[calc(100dvh-68px)] w-full max-w-lg flex-col px-3.5 pb-safe pt-3">
+    <div className="mx-auto flex min-h-[calc(100dvh-68px)] w-full max-w-lg flex-col px-3.5 pb-safe pt-3">
       {/* GIANT OPEN CARD: Occupies ~75% of screen; ALL text & deck progress live inside */}
       <div
-        className={`relative flex flex-1 flex-col justify-between overflow-hidden rounded-[2rem] border-2 bg-[#0B1B28] px-6 py-6 text-center shadow-2xl transition-colors ${
+        className={`relative flex min-h-[320px] flex-1 flex-col justify-between rounded-[2rem] border-2 bg-[#0B1B28] px-6 py-6 text-center shadow-2xl transition-colors ${
           countdown === 'go'
             ? 'border-[#00E5C4] shadow-[0_0_36px_rgba(0,229,196,0.28)]'
             : countdown !== null
@@ -118,15 +118,15 @@ export function ZoePlay({
         }`}
       >
         {/* Integrated Progress Bar at Top of Card */}
-        <div className="absolute left-0 right-0 top-0 h-1.5 bg-[#07131D]">
+        <div className="mx-1 h-1.5 overflow-hidden rounded-full bg-[#07131D]">
           <div
-            className="h-full bg-[#00E5C4] transition-all duration-300"
+            className="h-full rounded-full bg-[#00E5C4] transition-all duration-300"
             style={{ width: `${((index + 1) / questions.length) * 100}%` }}
           />
         </div>
 
         {/* Inside Card Header */}
-        <div className="flex items-center justify-between gap-2 pt-1">
+        <div className="flex items-center justify-between gap-2 pt-3">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-[#07131D] px-3 py-1 text-xs font-bold text-[#19D8F2]">
             <HandMetal className="h-3.5 w-3.5" />
             {deckName} · {index + 1}/{questions.length}

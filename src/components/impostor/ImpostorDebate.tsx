@@ -64,10 +64,10 @@ export function ImpostorDebate({ players, match, onGoToVote }: ImpostorDebatePro
   };
 
   return (
-    <div className="mx-auto flex h-[calc(100dvh-68px)] w-full max-w-lg flex-col px-3.5 pb-safe pt-3">
+    <div className="mx-auto flex min-h-[calc(100dvh-68px)] w-full max-w-lg flex-col px-3.5 pb-safe pt-3">
       {/* SINGLE UNIFIED GIANT CARD containing speaker, rule, and interactive clock */}
       <div
-        className={`animate-pop-in flex flex-1 flex-col justify-between rounded-[2rem] border-2 bg-[#0B1B28] px-6 py-6 text-center shadow-2xl transition-colors ${
+        className={`animate-pop-in flex min-h-[340px] flex-1 flex-col justify-between rounded-[2rem] border-2 bg-[#0B1B28] px-6 py-6 text-center shadow-2xl transition-colors ${
           isUrgent || isFinished ? 'border-[#F97316]' : 'border-[#19D8F2]/40'
         }`}
       >

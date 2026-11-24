@@ -45,10 +45,10 @@ export function ImpostorDistribute({
   const progressPct = ((currentIndex + (revealed ? 1 : 0.4)) / players.length) * 100;
 
   return (
-    <div className="mx-auto flex h-[calc(100dvh-68px)] w-full max-w-lg flex-col px-3.5 pb-safe pt-3">
+    <div className="mx-auto flex min-h-[calc(100dvh-68px)] w-full max-w-lg flex-col px-3.5 pb-safe pt-3">
       {/* GIANT OPEN CARD: Occupies ~75% of screen with ALL text inside */}
       <div
-        className={`relative flex flex-1 flex-col justify-between overflow-hidden rounded-[2rem] border-2 bg-[#0B1B28] px-6 py-6 text-center shadow-2xl transition-colors ${
+        className={`relative flex min-h-[340px] flex-1 flex-col justify-between rounded-[2rem] border-2 bg-[#0B1B28] px-6 py-6 text-center shadow-2xl transition-colors ${
           !revealed
             ? 'border-[#19D8F2]/40'
             : isImpostor
@@ -57,15 +57,15 @@ export function ImpostorDistribute({
         }`}
       >
         {/* Integrated Progress Bar at top of card */}
-        <div className="absolute left-0 right-0 top-0 h-1.5 bg-[#07131D]">
+        <div className="mx-1 h-1.5 overflow-hidden rounded-full bg-[#07131D]">
           <div
-            className="h-full bg-[#00E5C4] transition-all duration-300"
+            className="h-full rounded-full bg-[#00E5C4] transition-all duration-300"
             style={{ width: `${progressPct}%` }}
           />
         </div>
 
         {/* Inside Card Header */}
-        <div className="flex items-center justify-between pt-1 text-xs font-bold">
+        <div className="flex items-center justify-between pt-3 text-xs font-bold">
           <span className="uppercase tracking-widest text-[#19D8F2]">Papel Secreto</span>
           <span className="rounded-full bg-[#07131D] px-3 py-1 text-[#F3FAFA]/80">
             {currentIndex + 1} / {players.length}

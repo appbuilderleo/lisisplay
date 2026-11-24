@@ -1,4 +1,4 @@
-import { Check, Layers, Play, Shuffle, Smartphone, Sparkles, User } from 'lucide-react';
+import { Check, Layers, MessageCircle, Play, Shuffle, Sparkles, User } from 'lucide-react';
 import { MIXED_WORD_DECK_ID, WORD_DECKS } from '../../data/decks';
 import { KiyumiMode } from '../../types';
 import { sound } from '../../lib/audio';
@@ -7,6 +7,7 @@ interface KiyumiSetupProps {
   mode: KiyumiMode;
   deckId: string;
   roundCount: number;
+  totalPoints: number;
   bestScore: number;
   onSelectMode: (mode: KiyumiMode) => void;
   onSelectDeck: (deckId: string) => void;
@@ -17,6 +18,7 @@ export function KiyumiSetup({
   mode,
   deckId,
   roundCount,
+  totalPoints,
   bestScore,
   onSelectMode,
   onSelectDeck,
@@ -27,24 +29,30 @@ export function KiyumiSetup({
       <div className="space-y-5">
         {/* Session stats pill if played before */}
         {roundCount > 0 && (
-          <div className="flex items-center justify-between rounded-2xl border border-[#19D8F2]/25 bg-[#0B1B28] px-4 py-2.5 text-xs">
+          <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-[#19D8F2]/25 bg-[#0B1B28] px-4 py-2.5 text-xs">
             <span className="font-semibold text-[#F3FAFA]/80">
-              Sessão atual: <strong className="text-[#19D8F2]">{roundCount} rondas</strong>
+              Rondas: <strong className="text-[#19D8F2]">{roundCount}</strong>
             </span>
             <span className="font-semibold text-[#F3FAFA]/80">
-              Recorde: <strong className="text-[#00E5C4]">{bestScore} acertos</strong>
+              Total:{' '}
+              <strong className={totalPoints < 0 ? 'text-[#F97316]' : 'text-[#00E5C4]'}>
+                {totalPoints > 0 ? `+${totalPoints}` : totalPoints} pts
+              </strong>
+            </span>
+            <span className="font-semibold text-[#F3FAFA]/80">
+              Recorde: <strong className="text-[#00E5C4]">{bestScore}</strong>
             </span>
           </div>
         )}
 
-        {/* Mode Selector */}
+        {/* Mode Selector: Modo Mímica / Palco & Modo Descreve (both Vertical) */}
         <section className="space-y-2.5">
           <div className="flex items-center justify-between px-1">
             <span className="text-xs font-bold uppercase tracking-widest text-[#19D8F2]">
               1. Escolhe o Modo
             </span>
             <span className="rounded-full bg-[#F97316]/15 px-2.5 py-0.5 text-[11px] font-bold text-[#F97316]">
-              60s · Reinicia ao acertar
+              30 Segundos Exatos
             </span>
           </div>
 
@@ -53,10 +61,10 @@ export function KiyumiSetup({
               type="button"
               onClick={() => {
                 sound.tap();
-                onSelectMode('testa');
+                onSelectMode('mimica');
               }}
               className={`flex flex-col items-start rounded-3xl border-2 bg-[#0B1B28] p-4 text-left transition active:scale-[0.98] ${
-                mode === 'testa'
+                mode === 'mimica'
                   ? 'border-[#00E5C4] shadow-[0_0_20px_rgba(0,229,196,0.16)]'
                   : 'border-[#F3FAFA]/10 hover:border-[#19D8F2]/40'
               }`}
@@ -64,20 +72,20 @@ export function KiyumiSetup({
               <div className="flex w-full items-center justify-between">
                 <span
                   className={`flex h-10 w-10 items-center justify-center rounded-2xl ${
-                    mode === 'testa'
+                    mode === 'mimica'
                       ? 'bg-[#00E5C4] text-[#07131D]'
                       : 'bg-[#07131D] text-[#19D8F2]'
                   }`}
                 >
-                  <Smartphone className="h-5 w-5 rotate-90" />
+                  <User className="h-5 w-5" />
                 </span>
-                {mode === 'testa' && <Check className="h-5 w-5 text-[#00E5C4]" />}
+                {mode === 'mimica' && <Check className="h-5 w-5 text-[#00E5C4]" />}
               </div>
               <h3 className="font-display mt-3 text-base font-extrabold text-[#F3FAFA]">
-                Modo Testa
+                Mímica / Palco
               </h3>
               <p className="mt-1 text-xs leading-snug text-[#F3FAFA]/70">
-                Celular na testa. Inclina ou toca para marcar acerto ou passar.
+                1 jogador vê a palavra em segredo e atua com gestos para o grupo adivinhar.
               </p>
             </button>
 
@@ -85,10 +93,10 @@ export function KiyumiSetup({
               type="button"
               onClick={() => {
                 sound.tap();
-                onSelectMode('palco');
+                onSelectMode('descreve');
               }}
               className={`flex flex-col items-start rounded-3xl border-2 bg-[#0B1B28] p-4 text-left transition active:scale-[0.98] ${
-                mode === 'palco'
+                mode === 'descreve'
                   ? 'border-[#00E5C4] shadow-[0_0_20px_rgba(0,229,196,0.16)]'
                   : 'border-[#F3FAFA]/10 hover:border-[#19D8F2]/40'
               }`}
@@ -96,23 +104,28 @@ export function KiyumiSetup({
               <div className="flex w-full items-center justify-between">
                 <span
                   className={`flex h-10 w-10 items-center justify-center rounded-2xl ${
-                    mode === 'palco'
+                    mode === 'descreve'
                       ? 'bg-[#00E5C4] text-[#07131D]'
                       : 'bg-[#07131D] text-[#F97316]'
                   }`}
                 >
-                  <User className="h-5 w-5" />
+                  <MessageCircle className="h-5 w-5" />
                 </span>
-                {mode === 'palco' && <Check className="h-5 w-5 text-[#00E5C4]" />}
+                {mode === 'descreve' && <Check className="h-5 w-5 text-[#00E5C4]" />}
               </div>
               <h3 className="font-display mt-3 text-base font-extrabold text-[#F3FAFA]">
-                Modo Palco
+                Modo Descreve
               </h3>
               <p className="mt-1 text-xs leading-snug text-[#F3FAFA]/70">
-                Lê a palavra e representa em pé para o grupo adivinhar.
+                Explica a palavra por voz sem dizer nenhuma palavra escrita no ecrã.
               </p>
             </button>
           </div>
+
+          <p className="rounded-2xl border border-[#F3FAFA]/10 bg-[#0B1B28]/70 px-3.5 py-2 text-[11px] font-medium text-[#F3FAFA]/75">
+            <strong className="text-[#00E5C4]">+1 ponto</strong> por cada acerto em 30s ·{' '}
+            <strong className="text-[#F97316]">0 acertos = -1 ponto</strong> ao fim da ronda.
+          </p>
         </section>
 
         {/* Cultural Deck Selector */}
@@ -183,7 +196,7 @@ export function KiyumiSetup({
               }`}
             >
               <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-3 min-w-0">
+                <div className="flex min-w-0 items-center gap-3">
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F97316]/15 text-[#F97316]">
                     <Shuffle className="h-4 w-4" />
                   </span>
@@ -225,7 +238,7 @@ export function KiyumiSetup({
             className="flex min-h-[56px] w-full items-center justify-center gap-2.5 rounded-2xl bg-[#00E5C4] px-6 font-display text-lg font-extrabold text-[#07131D] shadow-[0_8px_30px_rgba(0,229,196,0.28)] transition active:scale-[0.98]"
           >
             <Sparkles className="h-5 w-5" />
-            Começar Ronda (60s)
+            Começar Ronda (30s)
             <Play className="h-4 w-4 fill-current" />
           </button>
         </div>

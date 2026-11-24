@@ -23,15 +23,15 @@ export const RULES_CONTENT: Record<RulesTab, RuleSection> = {
   },
   kiyumi: {
     id: 'kiyumi',
-    title: 'Kiyumi · Mímica 60s',
-    tagline: 'Adrenalina pura: cada acerto reinicia o tempo para 60 segundos!',
+    title: 'Kiyumi · Mímica 30s',
+    tagline: 'Energia máxima e zero tempos mortos em rondas de 30 segundos exatos.',
     steps: [
-      'Escolhe um baralho cultural moçambicano e o modo: Modo Testa (horizontal) ou Modo Palco (vertical).',
-      'Modo Testa: segura o celular na testa virado para o grupo. O grupo faz mímica; inclina para baixo para marcar +1 ou para cima para passar (ou usa os botões táteis).',
-      'Modo Palco: lê a palavra secreta e representa em pé para o grupo adivinhar antes dos 60 segundos acabarem.',
-      'Cada vez que acertarem, o cronómetro reinicia imediatamente para 60s! Se passarem uma palavra, o tempo continua a contar.',
+      'Escolhe um baralho cultural moçambicano e o modo vertical: Mímica / Palco ou Modo Descreve.',
+      'Modo Mímica / Palco: 1 jogador vê a palavra em segredo e representa em pé com gestos enquanto o grupo tenta adivinhar em 30s.',
+      'Modo Descreve: 1 jogador explica a palavra por voz com frases descritivas, sem dizer nenhuma palavra escrita no ecrã.',
+      'Cada acerto soma +1 ponto e abre logo a palavra seguinte na mão do mesmo jogador. Quando os 30s terminam, passa o celular; com 0 acertos, perde 1 ponto (-1).',
     ],
-    tip: 'Nos últimos 5 segundos o cronómetro fica laranja e toca um tick acelerado para avisar a reta final.',
+    tip: 'Mantém o som ligado: há tick nos últimos 5 segundos, som de acerto, som de passagem, alarme final e vibração háptica.',
   },
   impostor: {
     id: 'impostor',

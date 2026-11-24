@@ -13,9 +13,9 @@ export function ImpostorVote({ players, onAccuse }: ImpostorVoteProps) {
   const selectedPlayer = players.find((p) => p.id === selectedId) ?? null;
 
   return (
-    <div className="mx-auto flex h-[calc(100dvh-68px)] w-full max-w-lg flex-col px-3.5 pb-safe pt-3">
+    <div className="mx-auto flex min-h-[calc(100dvh-68px)] w-full max-w-lg flex-col px-3.5 pb-safe pt-3">
       {/* Unified Open Voting Card */}
-      <div className="flex flex-1 flex-col overflow-hidden rounded-[2rem] border-2 border-[#F97316]/45 bg-[#0B1B28] px-5 py-5 shadow-2xl">
+      <div className="flex min-h-[340px] flex-1 flex-col rounded-[2rem] border-2 border-[#F97316]/45 bg-[#0B1B28] px-5 py-5 shadow-2xl">
         <div className="text-center">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F97316]/15 px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#F97316]">
             <Gavel className="h-3.5 w-3.5" />
@@ -29,7 +29,7 @@ export function ImpostorVote({ players, onAccuse }: ImpostorVoteProps) {
           </p>
         </div>
 
-        <div className="mt-4 flex-1 overflow-y-auto pr-0.5">
+        <div className="mt-4 flex-1">
           <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
             {players.map((player) => {
               const isSelected = selectedId === player.id;

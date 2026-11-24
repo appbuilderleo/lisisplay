@@ -20,7 +20,7 @@ export interface ZoeDeck {
   questions: string[];
 }
 
-export type KiyumiMode = 'testa' | 'palco';
+export type KiyumiMode = 'mimica' | 'descreve';
 
 export interface KiyumiRoundWord {
   word: string;
@@ -32,6 +32,7 @@ export interface KiyumiRoundRecord {
   deckName: string;
   mode: KiyumiMode;
   score: number;
+  roundPoints: number;
   passed: number;
   items: KiyumiRoundWord[];
 }

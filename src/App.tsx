@@ -12,7 +12,7 @@ import { ImpostorGame } from './components/impostor/ImpostorGame';
 import { ZoeGame } from './components/zoe/ZoeGame';
 
 const GAME_META: Record<GameId, { title: string; subtitle: string }> = {
-  kiyumi: { title: 'Kiyumi', subtitle: 'Mímica Rápida · 60s' },
+  kiyumi: { title: 'Kiyumi', subtitle: 'Mímica Rápida · 30s' },
   impostor: { title: 'O Impostor', subtitle: 'Dedução Social · Clássico' },
   zoe: { title: 'Zoe', subtitle: 'Quem na Roda?' },
 };

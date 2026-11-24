@@ -2,7 +2,6 @@ import { useCallback, useRef, useState } from 'react';
 import { getDeckWords, WORD_DECKS } from '../../data/decks';
 import { KiyumiMode, KiyumiRoundRecord, KiyumiRoundWord } from '../../types';
 import { shuffleArray } from '../../lib/shuffle';
-import { requestMotionPermissionIfNeeded } from '../../hooks/useDeviceTilt';
 import { sound } from '../../lib/audio';
 import { CountdownOverlay } from '../ui/CountdownOverlay';
 import { KiyumiSetup } from './KiyumiSetup';
@@ -22,7 +21,7 @@ interface KiyumiGameProps {
 
 export function KiyumiGame({ onRequestConfirm }: KiyumiGameProps) {
   const [phase, setPhase] = useState<KiyumiPhase>('setup');
-  const [mode, setMode] = useState<KiyumiMode>('testa');
+  const [mode, setMode] = useState<KiyumiMode>('mimica');
   const [deckId, setDeckId] = useState<string>(WORD_DECKS[0].id);
   const [history, setHistory] = useState<KiyumiRoundRecord[]>([]);
 
@@ -43,14 +42,12 @@ export function KiyumiGame({ onRequestConfirm }: KiyumiGameProps) {
 
   const deckInfo = getDeckWords(deckId);
   const bestScore = history.reduce((max, r) => Math.max(max, r.score), 0);
+  const totalPoints = history.reduce((sum, r) => sum + r.roundPoints, 0);
   const lastRecord = history[history.length - 1] ?? null;
 
-  const handleStartRound = async () => {
+  const handleStartRound = () => {
     sound.unlock();
     sound.tap();
-    if (mode === 'testa') {
-      await requestMotionPermissionIfNeeded();
-    }
     setPhase('countdown');
   };
 
@@ -58,11 +55,15 @@ export function KiyumiGame({ onRequestConfirm }: KiyumiGameProps) {
     (items: KiyumiRoundWord[]) => {
       const score = items.filter((i) => i.status === 'correct').length;
       const passed = items.filter((i) => i.status === 'passed').length;
+      // Regra Kiyumi: cada acerto soma +1; se terminar os 30s com 0 acertos, perde 1 ponto (-1)
+      const roundPoints = score > 0 ? score : -1;
+
       const record: KiyumiRoundRecord = {
         roundNumber: history.length + 1,
         deckName: deckInfo.name,
         mode,
         score,
+        roundPoints,
         passed,
         items,
       };
@@ -75,7 +76,7 @@ export function KiyumiGame({ onRequestConfirm }: KiyumiGameProps) {
   const handleAbortRound = () => {
     onRequestConfirm({
       title: 'Terminar esta ronda?',
-      message: 'A ronda de 60 segundos em curso será cancelada e voltarás à configuração do Kiyumi.',
+      message: 'A ronda de 30 segundos em curso será cancelada e voltarás à configuração do Kiyumi.',
       confirmLabel: 'Terminar Ronda',
       onConfirm: () => setPhase('setup'),
     });
@@ -84,11 +85,11 @@ export function KiyumiGame({ onRequestConfirm }: KiyumiGameProps) {
   if (phase === 'countdown') {
     return (
       <CountdownOverlay
-        title={`Kiyumi · ${mode === 'testa' ? 'Modo Testa' : 'Modo Palco'}`}
+        title={`Kiyumi · ${mode === 'mimica' ? 'Mímica / Palco' : 'Modo Descreve'}`}
         instruction={
-          mode === 'testa'
-            ? 'Coloca o celular na testa virado para o grupo!'
-            : 'Prepara-te! Lê a palavra em segredo e representa.'
+          mode === 'mimica'
+            ? 'Só tu olhas para a palavra! Prepara-te para representar em pé com gestos.'
+            : 'Prepara-te! Explica a palavra por voz sem dizer nada escrito no ecrã.'
         }
         onComplete={() => setPhase('playing')}
         onCancel={() => setPhase('setup')}
@@ -112,6 +113,7 @@ export function KiyumiGame({ onRequestConfirm }: KiyumiGameProps) {
     return (
       <KiyumiSummary
         record={lastRecord}
+        totalPoints={totalPoints}
         bestScore={bestScore}
         onNewRound={handleStartRound}
         onChangeSetup={() => setPhase('setup')}
@@ -124,6 +126,7 @@ export function KiyumiGame({ onRequestConfirm }: KiyumiGameProps) {
       mode={mode}
       deckId={deckId}
       roundCount={history.length}
+      totalPoints={totalPoints}
       bestScore={bestScore}
       onSelectMode={setMode}
       onSelectDeck={setDeckId}

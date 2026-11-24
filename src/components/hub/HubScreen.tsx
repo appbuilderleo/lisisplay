@@ -30,10 +30,10 @@ const GAMES: GameCardInfo[] = [
     id: 'kiyumi',
     number: '01',
     name: 'Kiyumi',
-    tagline: 'Mímica rápida (60s) · Modo Testa & Palco',
+    tagline: 'Mímica rápida (30s) · Mímica & Descreve',
     description:
-      'Inclina o celular na testa ou representa em pé para a tua equipa adivinhar palavras nossas. Cada acerto reinicia os 60s!',
-    badges: ['60 Segundos', 'Testa & Palco', '2+ Jogadores'],
+      'Representa com gestos ou descreve por voz para o grupo adivinhar em 30 segundos. Cada acerto vale +1 ponto!',
+    badges: ['30 Segundos', 'Mímica & Descreve', '2+ Jogadores'],
     accent: 'turquoise',
     icon: Flame,
   },

@@ -1,9 +1,17 @@
-import { CheckCircle2, RefreshCw, Settings2, SkipForward, Trophy } from 'lucide-react';
+import {
+  AlertTriangle,
+  CheckCircle2,
+  RefreshCw,
+  Settings2,
+  SkipForward,
+  Trophy,
+} from 'lucide-react';
 import { KiyumiRoundRecord } from '../../types';
 import { sound } from '../../lib/audio';
 
 interface KiyumiSummaryProps {
   record: KiyumiRoundRecord;
+  totalPoints: number;
   bestScore: number;
   onNewRound: () => void;
   onChangeSetup: () => void;
@@ -12,39 +20,57 @@ interface KiyumiSummaryProps {
 function getCelebrationMessage(score: number): string {
   if (score >= 10) return 'Lendário! A roda está imparável!';
   if (score >= 7) return 'Brilhante! Sintonia total no grupo!';
-  if (score >= 4) return 'Boa ronda! O aquecimento está forte!';
-  if (score >= 1) return 'Valeu! Agora é a vez do próximo mostrar serviço!';
-  return 'Sem pânico! A próxima ronda vai rebentar!';
+  if (score >= 4) return 'Boa ronda! O ritmo está forte!';
+  if (score >= 1) return 'Boa! Agora passa o celular ao próximo jogador!';
+  return '0 acertos nos 30s — penalização de -1 ponto! Passa o celular e recupera na próxima!';
 }
 
 export function KiyumiSummary({
   record,
+  totalPoints,
   bestScore,
   onNewRound,
   onChangeSetup,
 }: KiyumiSummaryProps) {
+  const isPenalty = record.score === 0;
   const isNewRecord = record.score > 0 && record.score >= bestScore && record.roundNumber > 1;
+  const modeLabel = record.mode === 'mimica' ? 'Mímica' : 'Descreve';
 
   return (
     <div className="mx-auto flex min-h-[calc(100dvh-70px)] w-full max-w-lg flex-col justify-between px-4 pb-28 pt-4">
       <div className="space-y-4">
         {/* Big Score Banner */}
-        <section className="animate-pop-in relative overflow-hidden rounded-3xl border-2 border-[#00E5C4]/50 bg-[#0B1B28] p-6 text-center">
+        <section
+          className={`animate-pop-in relative rounded-3xl border-2 bg-[#0B1B28] p-6 text-center ${
+            isPenalty ? 'border-[#F97316]' : 'border-[#00E5C4]/50'
+          }`}
+        >
           <div className="flex items-center justify-center gap-2">
             <span className="rounded-full bg-[#07131D] px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#19D8F2]">
-              Fim da Ronda #{record.roundNumber} · {record.deckName}
+              Ronda #{record.roundNumber} · {modeLabel} · {record.deckName}
             </span>
           </div>
 
           <div className="mt-4 flex flex-col items-center">
             <div className="flex items-baseline gap-2">
-              <span className="font-display text-7xl font-extrabold leading-none text-[#00E5C4]">
-                {record.score}
+              <span
+                className={`font-display text-7xl font-extrabold leading-none ${
+                  isPenalty ? 'text-[#F97316]' : 'text-[#00E5C4]'
+                }`}
+              >
+                {record.roundPoints > 0 ? `+${record.roundPoints}` : record.roundPoints}
               </span>
               <span className="font-display text-xl font-bold text-[#F3FAFA]/80">
-                {record.score === 1 ? 'acerto' : 'acertos'}
+                {Math.abs(record.roundPoints) === 1 ? 'ponto' : 'pontos'}
               </span>
             </div>
+
+            {isPenalty && (
+              <span className="mt-2.5 inline-flex items-center gap-1.5 rounded-full bg-[#F97316]/15 px-3 py-1 text-xs font-bold text-[#F97316]">
+                <AlertTriangle className="h-3.5 w-3.5" />
+                0 acertos → -1 ponto
+              </span>
+            )}
 
             {isNewRecord && (
               <span className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[#F97316]/15 px-3 py-1 text-xs font-bold text-[#F97316]">
@@ -58,17 +84,27 @@ export function KiyumiSummary({
             </p>
           </div>
 
-          <div className="mt-5 grid grid-cols-2 gap-2.5">
+          <div className="mt-5 grid grid-cols-3 gap-2">
             <div className="rounded-2xl bg-[#07131D] p-3">
-              <p className="text-xs font-semibold text-[#F3FAFA]/60">Acertadas</p>
+              <p className="text-[11px] font-semibold text-[#F3FAFA]/60">Acertos</p>
               <p className="font-display mt-0.5 text-2xl font-extrabold text-[#00E5C4]">
                 {record.score}
               </p>
             </div>
             <div className="rounded-2xl bg-[#07131D] p-3">
-              <p className="text-xs font-semibold text-[#F3FAFA]/60">Passadas</p>
+              <p className="text-[11px] font-semibold text-[#F3FAFA]/60">Passadas</p>
               <p className="font-display mt-0.5 text-2xl font-extrabold text-[#F97316]">
                 {record.passed}
+              </p>
+            </div>
+            <div className="rounded-2xl bg-[#07131D] p-3">
+              <p className="text-[11px] font-semibold text-[#F3FAFA]/60">Sessão</p>
+              <p
+                className={`font-display mt-0.5 text-2xl font-extrabold ${
+                  totalPoints < 0 ? 'text-[#F97316]' : 'text-[#19D8F2]'
+                }`}
+              >
+                {totalPoints > 0 ? `+${totalPoints}` : totalPoints}
               </p>
             </div>
           </div>
@@ -82,7 +118,7 @@ export function KiyumiSummary({
 
           {record.items.length === 0 ? (
             <div className="rounded-2xl border border-[#F3FAFA]/10 bg-[#0B1B28] p-5 text-center text-sm text-[#F3FAFA]/65">
-              Nenhuma palavra foi registada nesta ronda.
+              Nenhuma palavra acertada ou passada nesta ronda.
             </div>
           ) : (
             <ul className="space-y-2">
@@ -108,7 +144,7 @@ export function KiyumiSummary({
                       {hit ? (
                         <>
                           <CheckCircle2 className="h-3.5 w-3.5" />
-                          Acertou
+                          Acertou +1
                         </>
                       ) : (
                         <>
