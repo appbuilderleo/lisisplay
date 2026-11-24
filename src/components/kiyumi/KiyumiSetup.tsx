@@ -44,7 +44,7 @@ export function KiyumiSetup({
               1. Escolhe o Modo
             </span>
             <span className="rounded-full bg-[#F97316]/15 px-2.5 py-0.5 text-[11px] font-bold text-[#F97316]">
-              30 Segundos Exatos
+              60s · Reinicia ao acertar
             </span>
           </div>
 
@@ -225,7 +225,7 @@ export function KiyumiSetup({
             className="flex min-h-[56px] w-full items-center justify-center gap-2.5 rounded-2xl bg-[#00E5C4] px-6 font-display text-lg font-extrabold text-[#07131D] shadow-[0_8px_30px_rgba(0,229,196,0.28)] transition active:scale-[0.98]"
           >
             <Sparkles className="h-5 w-5" />
-            Começar Ronda (30s)
+            Começar Ronda (60s)
             <Play className="h-4 w-4 fill-current" />
           </button>
         </div>

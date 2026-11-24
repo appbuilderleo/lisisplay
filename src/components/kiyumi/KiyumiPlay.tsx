@@ -12,7 +12,7 @@ import { sound } from '../../lib/audio';
 import { useDeviceTilt } from '../../hooks/useDeviceTilt';
 import { useWakeLock } from '../../hooks/useWakeLock';
 
-const ROUND_SECONDS = 30;
+const ROUND_SECONDS = 60;
 
 interface KiyumiPlayProps {
   mode: KiyumiMode;
@@ -30,6 +30,7 @@ export function KiyumiPlay({
   onAbort,
 }: KiyumiPlayProps) {
   const [timeLeft, setTimeLeft] = useState<number>(ROUND_SECONDS);
+  const [timerEpoch, setTimerEpoch] = useState<number>(0);
   const [paused, setPaused] = useState(false);
   const [hideWord, setHideWord] = useState(false);
   const [currentWord, setCurrentWord] = useState<string>(() => getNextWord());
@@ -76,7 +77,7 @@ export function KiyumiPlay({
     }, 1000);
 
     return () => window.clearInterval(timer);
-  }, [paused, onFinish]);
+  }, [paused, onFinish, timerEpoch]);
 
   const recordAction = useCallback(
     (status: 'correct' | 'passed') => {
@@ -87,6 +88,8 @@ export function KiyumiPlay({
 
       if (status === 'correct') {
         sound.correct();
+        setTimeLeft(ROUND_SECONDS);
+        setTimerEpoch((e) => e + 1);
       } else {
         sound.pass();
       }
@@ -125,18 +128,16 @@ export function KiyumiPlay({
       {feedback && (
         <div
           key={feedback.key}
-          className={`animate-feedback-flash pointer-events-none fixed inset-0 z-40 flex items-center justify-center ${
-            feedback.type === 'correct' ? 'bg-[#00E5C4]/25' : 'bg-[#F97316]/25'
-          }`}
+          className={`animate-feedback-flash pointer-events-none fixed inset-0 z-40 flex items-center justify-center ${feedback.type === 'correct' ? 'bg-[#00E5C4]/25' : 'bg-[#F97316]/25'
+            }`}
         >
           <span
-            className={`font-display rounded-full px-6 py-2 text-2xl font-extrabold uppercase tracking-wider ${
-              feedback.type === 'correct'
+            className={`font-display rounded-full px-6 py-2 text-2xl font-extrabold uppercase tracking-wider ${feedback.type === 'correct'
                 ? 'bg-[#00E5C4] text-[#07131D]'
                 : 'bg-[#F97316] text-[#07131D]'
-            }`}
+              }`}
           >
-            {feedback.type === 'correct' ? 'ACERTOU! +1' : 'PASSOU'}
+            {feedback.type === 'correct' ? 'ACERTOU! +1 · 60s' : 'PASSOU'}
           </span>
         </div>
       )}
@@ -151,11 +152,10 @@ export function KiyumiPlay({
         </div>
 
         <div
-          className={`flex items-center gap-2 rounded-full border-2 bg-[#0B1B28] px-4 py-1 ${
-            isUrgent
+          className={`flex items-center gap-2 rounded-full border-2 bg-[#0B1B28] px-4 py-1 ${isUrgent
               ? 'animate-urgent-pulse border-[#F97316] text-[#F97316]'
               : 'border-[#19D8F2]/50 text-[#19D8F2]'
-          }`}
+            }`}
         >
           <span className="font-display text-2xl font-extrabold tabular-nums leading-none">
             {timeLeft}s
@@ -184,16 +184,14 @@ export function KiyumiPlay({
               setHideWord((h) => !h);
             }
           }}
-          className={`relative flex flex-1 flex-col justify-between overflow-hidden rounded-[2rem] border-2 bg-[#0B1B28] px-6 py-6 text-center shadow-2xl transition-colors ${
-            isUrgent ? 'border-[#F97316]' : 'border-[#00E5C4]/45'
-          } ${mode === 'palco' && !paused ? 'cursor-pointer' : ''}`}
+          className={`relative flex flex-1 flex-col justify-between overflow-hidden rounded-[2rem] border-2 bg-[#0B1B28] px-6 py-6 text-center shadow-2xl transition-colors ${isUrgent ? 'border-[#F97316]' : 'border-[#00E5C4]/45'
+            } ${mode === 'palco' && !paused ? 'cursor-pointer' : ''}`}
         >
           {/* Thin Timer Progress Bar integrated at the very top of the card */}
           <div className="absolute left-0 right-0 top-0 h-1.5 bg-[#07131D]">
             <div
-              className={`h-full transition-all duration-500 ease-linear ${
-                isUrgent ? 'bg-[#F97316]' : 'bg-[#19D8F2]'
-              }`}
+              className={`h-full transition-all duration-500 ease-linear ${isUrgent ? 'bg-[#F97316]' : 'bg-[#19D8F2]'
+                }`}
               style={{ width: `${progress * 100}%` }}
             />
           </div>

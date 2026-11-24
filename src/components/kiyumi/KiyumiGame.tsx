@@ -75,7 +75,7 @@ export function KiyumiGame({ onRequestConfirm }: KiyumiGameProps) {
   const handleAbortRound = () => {
     onRequestConfirm({
       title: 'Terminar esta ronda?',
-      message: 'A ronda de 30 segundos em curso será cancelada e voltarás à configuração do Kiyumi.',
+      message: 'A ronda de 60 segundos em curso será cancelada e voltarás à configuração do Kiyumi.',
       confirmLabel: 'Terminar Ronda',
       onConfirm: () => setPhase('setup'),
     });

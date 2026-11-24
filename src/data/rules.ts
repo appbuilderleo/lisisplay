@@ -23,13 +23,13 @@ export const RULES_CONTENT: Record<RulesTab, RuleSection> = {
   },
   kiyumi: {
     id: 'kiyumi',
-    title: 'Kiyumi · Mímica 30s',
-    tagline: 'Adrenalina pura em rondas relâmpago de 30 segundos exatos.',
+    title: 'Kiyumi · Mímica 60s',
+    tagline: 'Adrenalina pura: cada acerto reinicia o tempo para 60 segundos!',
     steps: [
       'Escolhe um baralho cultural moçambicano e o modo: Modo Testa (horizontal) ou Modo Palco (vertical).',
       'Modo Testa: segura o celular na testa virado para o grupo. O grupo faz mímica; inclina para baixo para marcar +1 ou para cima para passar (ou usa os botões táteis).',
-      'Modo Palco: lê a palavra secreta e representa em pé para o grupo adivinhar antes dos 30 segundos acabarem.',
-      'No fim da ronda, vê o resumo de acertos e passa o celular para o próximo jogador!',
+      'Modo Palco: lê a palavra secreta e representa em pé para o grupo adivinhar antes dos 60 segundos acabarem.',
+      'Cada vez que acertarem, o cronómetro reinicia imediatamente para 60s! Se passarem uma palavra, o tempo continua a contar.',
     ],
     tip: 'Nos últimos 5 segundos o cronómetro fica laranja e toca um tick acelerado para avisar a reta final.',
   },
