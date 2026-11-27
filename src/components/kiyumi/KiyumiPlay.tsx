@@ -18,14 +18,18 @@ const ROUND_SECONDS = 30;
 interface KiyumiPlayProps {
   mode: KiyumiMode;
   deckName: string;
-  getNextWord: () => string;
-  onFinish: (items: KiyumiRoundWord[]) => void;
+  initialWord: string;
+  remainingAfterInitial: number;
+  getNextWord: () => { word: string | null; remaining: number };
+  onFinish: (items: KiyumiRoundWord[], deckExhausted: boolean) => void;
   onAbort: () => void;
 }
 
 export function KiyumiPlay({
   mode,
   deckName,
+  initialWord,
+  remainingAfterInitial,
   getNextWord,
   onFinish,
   onAbort,
@@ -34,7 +38,8 @@ export function KiyumiPlay({
   const [timerEpoch, setTimerEpoch] = useState<number>(0);
   const [paused, setPaused] = useState(false);
   const [hideWord, setHideWord] = useState(false);
-  const [currentWord, setCurrentWord] = useState<string>(() => getNextWord());
+  const [currentWord, setCurrentWord] = useState<string>(initialWord);
+  const [remainingInDeck, setRemainingInDeck] = useState<number>(remainingAfterInitial);
   const [results, setResults] = useState<KiyumiRoundWord[]>([]);
   const [feedback, setFeedback] = useState<{ type: 'correct' | 'passed'; key: number } | null>(
     null,
@@ -66,7 +71,7 @@ export function KiyumiPlay({
             finishedRef.current = true;
             sound.roundEnd();
             window.setTimeout(() => {
-              onFinish(resultsRef.current);
+              onFinish(resultsRef.current, false);
             }, 260);
           }
           return 0;
@@ -88,6 +93,26 @@ export function KiyumiPlay({
       if (now - lastActionRef.current < 260) return;
       lastActionRef.current = now;
 
+      const nextResults: KiyumiRoundWord[] = [
+        ...resultsRef.current,
+        { word: currentWordRef.current, status },
+      ];
+      resultsRef.current = nextResults;
+      setResults(nextResults);
+      setFeedback({ type: status, key: now });
+
+      const drawn = getNextWord();
+      if (!drawn.word) {
+        // Sem mais palavras no baralho: não repete, termina imediatamente o jogo e mostra a pontuação!
+        finishedRef.current = true;
+        setRemainingInDeck(0);
+        sound.victory();
+        window.setTimeout(() => {
+          onFinish(nextResults, true);
+        }, 320);
+        return;
+      }
+
       if (status === 'correct') {
         sound.correct();
         setTimeLeft(ROUND_SECONDS);
@@ -96,17 +121,11 @@ export function KiyumiPlay({
         sound.pass();
       }
 
-      const nextResults: KiyumiRoundWord[] = [
-        ...resultsRef.current,
-        { word: currentWordRef.current, status },
-      ];
-      resultsRef.current = nextResults;
-      setResults(nextResults);
-      setFeedback({ type: status, key: now });
-      setCurrentWord(getNextWord());
+      setRemainingInDeck(drawn.remaining);
+      setCurrentWord(drawn.word);
       setHideWord(false);
     },
-    [paused, getNextWord],
+    [paused, getNextWord, onFinish],
   );
 
   const progress = Math.max(0, timeLeft / ROUND_SECONDS);
@@ -195,7 +214,7 @@ export function KiyumiPlay({
             </div>
 
             {/* Inside Card Header */}
-            <div className="pt-3">
+            <div className="flex flex-wrap items-center justify-center gap-2 pt-3">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-[#070B14]/85 px-3.5 py-1 font-display text-xs font-bold text-[#00F5D4]">
                 {mode === 'mimica' ? (
                   <User className="h-3.5 w-3.5 text-[#00FFA3]" />
@@ -203,6 +222,11 @@ export function KiyumiPlay({
                   <MessageCircle className="h-3.5 w-3.5 text-[#FF6B35]" />
                 )}
                 {deckName} · {mode === 'mimica' ? 'Mímica / Palco' : 'Modo Descreve'}
+              </span>
+              <span className="rounded-full bg-[#070B14]/75 px-2.5 py-1 font-display text-[11px] font-bold text-[#94A3B8]">
+                {remainingInDeck === 0
+                  ? 'Última palavra!'
+                  : `+${remainingInDeck} no baralho`}
               </span>
             </div>
 

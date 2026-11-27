@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { WORD_DECKS } from '../../data/decks';
 import { ImpostorConfig, ImpostorMatch, ImpostorPlayer } from '../../types';
 import { loadImpostorPlayers, saveImpostorPlayers } from '../../lib/storage';
@@ -32,6 +32,7 @@ export function ImpostorGame({ onActiveChange }: ImpostorGameProps) {
   const [accusedId, setAccusedId] = useState<string | null>(null);
   const [guessedWord, setGuessedWord] = useState<string | undefined>(undefined);
   const [outcome, setOutcome] = useState<ImpostorOutcome>('citizens-win');
+  const usedSecretWordsRef = useRef<Record<string, Set<string>>>({});
 
   const isInMatch = phase !== 'setup' && phase !== 'result';
   useWakeLock(phase !== 'setup');
@@ -63,9 +64,20 @@ export function ImpostorGame({ onActiveChange }: ImpostorGameProps) {
         ? pickRandom(WORD_DECKS)
         : WORD_DECKS.find((d) => d.id === config.deckId) ?? WORD_DECKS[0];
 
-    const shuffledWords = shuffleArray(chosenDeck.words);
-    const secretWord = shuffledWords[0];
-    const distractors = shuffledWords.slice(1, 4);
+    // Evitar repetir palavras secretas já jogadas na sessão
+    if (!usedSecretWordsRef.current[chosenDeck.id]) {
+      usedSecretWordsRef.current[chosenDeck.id] = new Set<string>();
+    }
+    const usedSet = usedSecretWordsRef.current[chosenDeck.id];
+    let availableSecrets = chosenDeck.words.filter((w) => !usedSet.has(w));
+    if (availableSecrets.length === 0) {
+      usedSet.clear();
+      availableSecrets = [...chosenDeck.words];
+    }
+
+    const secretWord = pickRandom(availableSecrets);
+    usedSet.add(secretWord);
+    const distractors = shuffleArray(chosenDeck.words.filter((w) => w !== secretWord)).slice(0, 3);
     const lastChanceOptions = shuffleArray([secretWord, ...distractors]);
 
     const impostorTotal = cleanedPlayers.length >= 6 ? config.impostorCount : 1;

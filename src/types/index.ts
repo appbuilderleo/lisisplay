@@ -35,6 +35,7 @@ export interface KiyumiRoundRecord {
   roundPoints: number;
   passed: number;
   items: KiyumiRoundWord[];
+  deckExhausted?: boolean;
 }
 
 export interface ImpostorPlayer {
