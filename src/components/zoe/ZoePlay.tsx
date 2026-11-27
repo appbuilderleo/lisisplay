@@ -68,14 +68,14 @@ export function ZoePlay({
   if (isCompleted) {
     return (
       <div className="mx-auto flex min-h-[calc(100dvh-68px)] w-full max-w-lg flex-col px-4 pb-safe pt-3">
-        <div className="animate-pop-in flex min-h-[300px] flex-1 flex-col items-center justify-center rounded-[2rem] border-2 border-[#00E5C4] bg-[#0B1B28] px-6 py-8 text-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-[#00E5C4]/15 text-[#00E5C4]">
+        <div className="animate-pop-in flex min-h-[300px] flex-1 flex-col items-center justify-center rounded-[2rem] border-2 border-[#00F5D4] bg-[#0F172A] px-6 py-8 text-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-[#00F5D4]/15 text-[#00F5D4]">
             <Sparkles className="h-9 w-9" />
           </div>
-          <h2 className="font-display mt-5 text-3xl font-extrabold text-[#F3FAFA]">
+          <h2 className="font-display mt-5 text-3xl font-extrabold text-[#F8FAFC]">
             Baralho Completo!
           </h2>
-          <p className="mt-2 max-w-xs text-sm text-[#F3FAFA]/80">
+          <p className="mt-2 max-w-xs text-sm text-[#F8FAFC]/80">
             Passaram por todas as {questions.length} cartas de{' '}
             <strong className="text-[#19D8F2]">{deckName}</strong>!
           </p>
@@ -88,14 +88,14 @@ export function ZoePlay({
               sound.tap();
               onChangeDeck();
             }}
-            className="min-h-[56px] rounded-2xl border border-[#F3FAFA]/15 bg-[#0B1B28] px-4 text-sm font-bold text-[#F3FAFA] transition active:scale-[0.98]"
+            className="min-h-[56px] rounded-2xl border border-[#F8FAFC]/15 bg-[#0F172A] px-4 text-sm font-bold text-[#F8FAFC] transition active:scale-[0.98]"
           >
             Trocar Baralho
           </button>
           <button
             type="button"
             onClick={handleRestart}
-            className="flex min-h-[56px] items-center justify-center gap-2 rounded-2xl bg-[#00E5C4] px-4 font-display text-base font-extrabold text-[#07131D] transition active:scale-[0.98]"
+            className="flex min-h-[56px] items-center justify-center gap-2 rounded-2xl bg-[#00F5D4] px-4 font-display text-base font-extrabold text-[#070B14] transition active:scale-[0.98]"
           >
             <RefreshCw className="h-5 w-5" />
             Jogar de Novo
@@ -109,25 +109,25 @@ export function ZoePlay({
     <div className="mx-auto flex min-h-[calc(100dvh-68px)] w-full max-w-lg flex-col px-3.5 pb-safe pt-3">
       {/* GIANT OPEN CARD: Occupies ~75% of screen; ALL text & deck progress live inside */}
       <div
-        className={`relative flex min-h-[320px] flex-1 flex-col justify-between rounded-[2rem] border-2 bg-[#0B1B28] px-6 py-6 text-center shadow-2xl transition-colors ${
+        className={`relative flex min-h-[320px] flex-1 flex-col justify-between rounded-[2rem] border-2 bg-[#0F172A] px-6 py-6 text-center shadow-2xl transition-colors ${
           countdown === 'go'
-            ? 'border-[#00E5C4] shadow-[0_0_36px_rgba(0,229,196,0.28)]'
+            ? 'border-[#00F5D4] shadow-[0_0_36px_rgba(0,229,196,0.28)]'
             : countdown !== null
-              ? 'border-[#F97316] shadow-[0_0_28px_rgba(249,115,22,0.22)]'
+              ? 'border-[#FF6B35] shadow-[0_0_28px_rgba(249,115,22,0.22)]'
               : 'border-[#19D8F2]/40'
         }`}
       >
         {/* Integrated Progress Bar at Top of Card */}
-        <div className="mx-1 h-1.5 overflow-hidden rounded-full bg-[#07131D]">
+        <div className="mx-1 h-1.5 overflow-hidden rounded-full bg-[#070B14]">
           <div
-            className="h-full rounded-full bg-[#00E5C4] transition-all duration-300"
+            className="h-full rounded-full bg-[#00F5D4] transition-all duration-300"
             style={{ width: `${((index + 1) / questions.length) * 100}%` }}
           />
         </div>
 
         {/* Inside Card Header */}
         <div className="flex items-center justify-between gap-2 pt-3">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#07131D] px-3 py-1 text-xs font-bold text-[#19D8F2]">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#070B14] px-3 py-1 text-xs font-bold text-[#19D8F2]">
             <HandMetal className="h-3.5 w-3.5" />
             {deckName} · {index + 1}/{questions.length}
           </span>
@@ -138,7 +138,7 @@ export function ZoePlay({
               sound.tap();
               onChangeDeck();
             }}
-            className="text-xs font-semibold text-[#F3FAFA]/65 underline decoration-[#19D8F2]/50 underline-offset-4 transition hover:text-[#19D8F2]"
+            className="text-xs font-semibold text-[#F8FAFC]/65 underline decoration-[#19D8F2]/50 underline-offset-4 transition hover:text-[#19D8F2]"
           >
             Baralhos
           </button>
@@ -152,13 +152,13 @@ export function ZoePlay({
                 key={String(countdown)}
                 className={`animate-count-pop font-display font-extrabold leading-none ${
                   countdown === 'go'
-                    ? 'text-5xl text-[#00E5C4] sm:text-6xl'
-                    : 'text-[7.5rem] text-[#F97316]'
+                    ? 'text-5xl text-[#00F5D4] sm:text-6xl'
+                    : 'text-[7.5rem] text-[#FF6B35]'
                 }`}
               >
                 {countdown === 'go' ? 'APONTEM!' : countdown}
               </div>
-              <p className="mt-5 text-sm font-semibold text-[#F3FAFA]/85">
+              <p className="mt-5 text-sm font-semibold text-[#F8FAFC]/85">
                 {countdown === 'go'
                   ? 'Quem recebeu mais dedos apontados?'
                   : 'Prepara o dedo na roda...'}
@@ -166,10 +166,10 @@ export function ZoePlay({
             </div>
           ) : (
             <div key={index} className="animate-pop-in flex flex-col items-center">
-              <span className="text-xs font-extrabold uppercase tracking-widest text-[#00E5C4]">
+              <span className="text-xs font-extrabold uppercase tracking-widest text-[#00F5D4]">
                 Quem na Roda?
               </span>
-              <h2 className="font-display mt-4 text-3xl font-extrabold leading-snug text-[#F3FAFA] sm:text-4xl">
+              <h2 className="font-display mt-4 text-3xl font-extrabold leading-snug text-[#F8FAFC] sm:text-4xl">
                 {currentQuestion}
               </h2>
             </div>
@@ -177,20 +177,20 @@ export function ZoePlay({
         </div>
 
         {/* Inside Card Footer Instruction */}
-        <div className="rounded-2xl bg-[#07131D]/85 px-4 py-2.5">
+        <div className="rounded-2xl bg-[#070B14]/85 px-4 py-2.5">
           <p className="text-xs font-semibold text-[#19D8F2]">
             Apontem todos ao mesmo tempo ao sinal de 3!
           </p>
         </div>
       </div>
 
-      {/* Minimal Single Row of 2 Thumb Buttons */}
+      {/* Minimal Single Row of 2 Pill Thumb Buttons */}
       <div className="flex items-center gap-3 py-3">
         <button
           type="button"
           disabled={countdown !== null}
           onClick={handleStartCountdown}
-          className="flex min-h-[60px] w-[38%] items-center justify-center gap-1.5 rounded-2xl border-2 border-[#F97316] bg-[#0B1B28] px-3 font-display text-base font-extrabold text-[#F97316] transition active:scale-[0.98] active:bg-[#F97316] active:text-[#07131D] disabled:opacity-50"
+          className="glass-card flex min-h-[58px] w-[38%] items-center justify-center gap-1.5 rounded-full border-2 border-[#FF6B35] px-3 font-display text-base font-extrabold text-[#FF6B35] transition active:scale-[0.98] active:bg-[#FF6B35] active:text-[#070B14] disabled:opacity-50"
         >
           <Timer className="h-5 w-5 shrink-0" />
           3 · 2 · 1
@@ -199,7 +199,7 @@ export function ZoePlay({
         <button
           type="button"
           onClick={handleNext}
-          className="flex min-h-[60px] flex-1 items-center justify-center gap-2 rounded-2xl bg-[#00E5C4] px-5 font-display text-base font-extrabold text-[#07131D] shadow-[0_8px_28px_rgba(0,229,196,0.28)] transition active:scale-[0.98]"
+          className="flex min-h-[58px] flex-1 items-center justify-center gap-2 rounded-full bg-[#00F5D4] px-5 font-display text-base font-extrabold text-[#070B14] shadow-[0_8px_28px_-4px_rgba(0,245,212,0.4)] transition active:scale-[0.98]"
         >
           Próxima
           <ArrowRight className="h-5 w-5" />

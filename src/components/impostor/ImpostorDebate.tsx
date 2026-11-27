@@ -67,17 +67,17 @@ export function ImpostorDebate({ players, match, onGoToVote }: ImpostorDebatePro
     <div className="mx-auto flex min-h-[calc(100dvh-68px)] w-full max-w-lg flex-col px-3.5 pb-safe pt-3">
       {/* SINGLE UNIFIED GIANT CARD containing speaker, rule, and interactive clock */}
       <div
-        className={`animate-pop-in flex min-h-[340px] flex-1 flex-col justify-between rounded-[2rem] border-2 bg-[#0B1B28] px-6 py-6 text-center shadow-2xl transition-colors ${
-          isUrgent || isFinished ? 'border-[#F97316]' : 'border-[#19D8F2]/40'
+        className={`animate-pop-in flex min-h-[340px] flex-1 flex-col justify-between rounded-[2rem] border-2 bg-[#0F172A] px-6 py-6 text-center shadow-2xl transition-colors ${
+          isUrgent || isFinished ? 'border-[#FF6B35]' : 'border-[#19D8F2]/40'
         }`}
       >
         {/* Inside Card Top Pills */}
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#07131D] px-3 py-1 text-xs font-bold text-[#19D8F2]">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#070B14] px-3 py-1 text-xs font-bold text-[#19D8F2]">
             <MessageSquare className="h-3.5 w-3.5" />
             {match.categoryName}
           </span>
-          <span className="rounded-full bg-[#07131D] px-3 py-1 text-xs font-bold text-[#F97316]">
+          <span className="rounded-full bg-[#070B14] px-3 py-1 text-xs font-bold text-[#FF6B35]">
             {match.impostorIds.length}{' '}
             {match.impostorIds.length === 1 ? 'Impostor' : 'Impostores'}
           </span>
@@ -86,17 +86,17 @@ export function ImpostorDebate({ players, match, onGoToVote }: ImpostorDebatePro
         {/* Inside Card Center: First Speaker + Debate Clock */}
         <div className="my-auto flex flex-col items-center space-y-6 py-4">
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-[#F3FAFA]/60">
+            <p className="text-xs font-bold uppercase tracking-widest text-[#F8FAFC]/60">
               Começa a dar a primeira pista
             </p>
-            <h2 className="font-display mt-1.5 text-4xl font-extrabold text-[#00E5C4] sm:text-5xl">
+            <h2 className="font-display mt-1.5 text-4xl font-extrabold text-[#00F5D4] sm:text-5xl">
               {firstSpeaker.name}
             </h2>
           </div>
 
           {/* Interactive Clock inside the card */}
-          <div className="w-full rounded-3xl border border-[#F3FAFA]/10 bg-[#07131D]/85 px-5 py-5">
-            <p className="text-[11px] font-bold uppercase tracking-widest text-[#F3FAFA]/55">
+          <div className="w-full rounded-3xl border border-[#F8FAFC]/10 bg-[#070B14]/85 px-5 py-5">
+            <p className="text-[11px] font-bold uppercase tracking-widest text-[#F8FAFC]/55">
               {isFinished ? 'Tempo esgotado!' : running ? 'Tempo de debate' : 'Debate em pausa'}
             </p>
 
@@ -105,7 +105,7 @@ export function ImpostorDebate({ players, match, onGoToVote }: ImpostorDebatePro
               onClick={handleToggleTimer}
               aria-label={running ? 'Pausar cronómetro' : 'Retomar cronómetro'}
               className={`font-display mt-1 inline-flex items-center gap-3 text-6xl font-extrabold tabular-nums tracking-tight transition active:scale-95 sm:text-7xl ${
-                isUrgent || isFinished ? 'text-[#F97316]' : 'text-[#19D8F2]'
+                isUrgent || isFinished ? 'text-[#FF6B35]' : 'text-[#19D8F2]'
               }`}
             >
               <span>{formatClock(secondsLeft)}</span>
@@ -115,7 +115,7 @@ export function ImpostorDebate({ players, match, onGoToVote }: ImpostorDebatePro
               <button
                 type="button"
                 onClick={handleToggleTimer}
-                className="inline-flex min-h-[40px] items-center gap-1.5 rounded-full border border-[#F3FAFA]/15 bg-[#0B1B28] px-4 text-xs font-bold text-[#F3FAFA] transition active:scale-95"
+                className="inline-flex min-h-[40px] items-center gap-1.5 rounded-full border border-[#F8FAFC]/15 bg-[#0F172A] px-4 text-xs font-bold text-[#F8FAFC] transition active:scale-95"
               >
                 {running && !isFinished ? (
                   <>
@@ -124,7 +124,7 @@ export function ImpostorDebate({ players, match, onGoToVote }: ImpostorDebatePro
                   </>
                 ) : (
                   <>
-                    <Play className="h-3.5 w-3.5 text-[#00E5C4]" />
+                    <Play className="h-3.5 w-3.5 text-[#00F5D4]" />
                     {isFinished ? '+1:00' : 'Retomar'}
                   </>
                 )}
@@ -133,7 +133,7 @@ export function ImpostorDebate({ players, match, onGoToVote }: ImpostorDebatePro
               <button
                 type="button"
                 onClick={handleAdd30}
-                className="inline-flex min-h-[40px] items-center gap-1 rounded-full border border-[#19D8F2]/35 bg-[#0B1B28] px-4 text-xs font-bold text-[#19D8F2] transition active:scale-95"
+                className="inline-flex min-h-[40px] items-center gap-1 rounded-full border border-[#19D8F2]/35 bg-[#0F172A] px-4 text-xs font-bold text-[#19D8F2] transition active:scale-95"
               >
                 <Plus className="h-3.5 w-3.5" />
                 30s
@@ -143,13 +143,13 @@ export function ImpostorDebate({ players, match, onGoToVote }: ImpostorDebatePro
         </div>
 
         {/* Inside Card Footer Rule */}
-        <div className="rounded-2xl bg-[#07131D]/85 px-4 py-2.5 text-xs leading-relaxed text-[#F3FAFA]/75">
-          Sentido horário: cada jogador diz <strong className="text-[#F3FAFA]">1 palavra-pista</strong>{' '}
+        <div className="rounded-2xl bg-[#070B14]/85 px-4 py-2.5 text-xs leading-relaxed text-[#F8FAFC]/75">
+          Sentido horário: cada jogador diz <strong className="text-[#F8FAFC]">1 palavra-pista</strong>{' '}
           e depois debatem quem é o Impostor.
         </div>
       </div>
 
-      {/* Single Primary Bottom Button */}
+      {/* Single Primary Pill Button */}
       <div className="py-3">
         <button
           type="button"
@@ -157,7 +157,7 @@ export function ImpostorDebate({ players, match, onGoToVote }: ImpostorDebatePro
             sound.go();
             onGoToVote();
           }}
-          className="flex min-h-[60px] w-full items-center justify-center gap-2.5 rounded-2xl bg-[#00E5C4] px-6 font-display text-lg font-extrabold text-[#07131D] shadow-[0_8px_28px_rgba(0,229,196,0.28)] transition active:scale-[0.98]"
+          className="flex min-h-[58px] w-full items-center justify-center gap-2.5 rounded-full bg-[#00F5D4] px-6 font-display text-base font-extrabold text-[#070B14] shadow-[0_8px_28px_-4px_rgba(0,245,212,0.42)] transition active:scale-[0.98]"
         >
           <Vote className="h-5 w-5" />
           Ir para Votação

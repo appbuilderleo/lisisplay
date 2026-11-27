@@ -26,7 +26,7 @@ export function ConfirmModal({ dialog, onClose }: ConfirmModalProps) {
               sound.tap();
               onClose();
             }}
-            className="min-h-[52px] rounded-2xl border border-[#F3FAFA]/20 bg-[#0B1B28] px-4 font-semibold text-[#F3FAFA] transition active:scale-[0.98]"
+            className="min-h-[52px] rounded-full border border-white/15 bg-[#1B2029] px-4 font-display text-sm font-bold text-[#F8FAFC] transition active:scale-[0.98]"
           >
             {dialog.cancelLabel ?? 'Cancelar'}
           </button>
@@ -37,10 +37,10 @@ export function ConfirmModal({ dialog, onClose }: ConfirmModalProps) {
               dialog.onConfirm();
               onClose();
             }}
-            className={`min-h-[52px] rounded-2xl px-4 font-display font-extrabold transition active:scale-[0.98] ${
+            className={`min-h-[52px] rounded-full px-4 font-display text-sm font-extrabold transition active:scale-[0.98] ${
               isDanger
-                ? 'bg-[#F97316] text-[#07131D]'
-                : 'bg-[#00E5C4] text-[#07131D]'
+                ? 'bg-[#FF6B35] text-[#070B14]'
+                : 'bg-[#00F5D4] text-[#070B14]'
             }`}
           >
             {dialog.confirmLabel}
@@ -51,12 +51,12 @@ export function ConfirmModal({ dialog, onClose }: ConfirmModalProps) {
       <div className="flex items-start gap-3.5 py-2">
         <div
           className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${
-            isDanger ? 'bg-[#F97316]/15 text-[#F97316]' : 'bg-[#19D8F2]/15 text-[#19D8F2]'
+            isDanger ? 'bg-[#FF6B35]/15 text-[#FF6B35]' : 'bg-[#00F5D4]/15 text-[#00F5D4]'
           }`}
         >
           <AlertTriangle className="h-6 w-6" />
         </div>
-        <p className="text-sm leading-relaxed text-[#F3FAFA]/90">{dialog.message}</p>
+        <p className="text-sm leading-relaxed text-[#DFE2F0]">{dialog.message}</p>
       </div>
     </Modal>
   );

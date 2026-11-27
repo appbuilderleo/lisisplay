@@ -48,18 +48,18 @@ export function ImpostorDistribute({
     <div className="mx-auto flex min-h-[calc(100dvh-68px)] w-full max-w-lg flex-col px-3.5 pb-safe pt-3">
       {/* GIANT OPEN CARD: Occupies ~75% of screen with ALL text inside */}
       <div
-        className={`relative flex min-h-[340px] flex-1 flex-col justify-between rounded-[2rem] border-2 bg-[#0B1B28] px-6 py-6 text-center shadow-2xl transition-colors ${
+        className={`relative flex min-h-[340px] flex-1 flex-col justify-between rounded-[2rem] border-2 bg-[#0F172A] px-6 py-6 text-center shadow-2xl transition-colors ${
           !revealed
             ? 'border-[#19D8F2]/40'
             : isImpostor
-              ? 'border-[#F97316] shadow-[0_0_32px_rgba(249,115,22,0.2)]'
-              : 'border-[#00E5C4] shadow-[0_0_32px_rgba(0,229,196,0.16)]'
+              ? 'border-[#FF6B35] shadow-[0_0_32px_rgba(249,115,22,0.2)]'
+              : 'border-[#00F5D4] shadow-[0_0_32px_rgba(0,229,196,0.16)]'
         }`}
       >
         {/* Integrated Progress Bar at top of card */}
-        <div className="mx-1 h-1.5 overflow-hidden rounded-full bg-[#07131D]">
+        <div className="mx-1 h-1.5 overflow-hidden rounded-full bg-[#070B14]">
           <div
-            className="h-full rounded-full bg-[#00E5C4] transition-all duration-300"
+            className="h-full rounded-full bg-[#00F5D4] transition-all duration-300"
             style={{ width: `${progressPct}%` }}
           />
         </div>
@@ -67,7 +67,7 @@ export function ImpostorDistribute({
         {/* Inside Card Header */}
         <div className="flex items-center justify-between pt-3 text-xs font-bold">
           <span className="uppercase tracking-widest text-[#19D8F2]">Papel Secreto</span>
-          <span className="rounded-full bg-[#07131D] px-3 py-1 text-[#F3FAFA]/80">
+          <span className="rounded-full bg-[#070B14] px-3 py-1 text-[#F8FAFC]/80">
             {currentIndex + 1} / {players.length}
           </span>
         </div>
@@ -84,7 +84,7 @@ export function ImpostorDistribute({
             <p className="mt-6 text-xs font-bold uppercase tracking-widest text-[#19D8F2]">
               Passa o celular para
             </p>
-            <h2 className="font-display mt-2 break-words text-4xl font-extrabold text-[#F3FAFA] sm:text-5xl">
+            <h2 className="font-display mt-2 break-words text-4xl font-extrabold text-[#F8FAFC] sm:text-5xl">
               {player.name}
             </h2>
           </div>
@@ -93,27 +93,27 @@ export function ImpostorDistribute({
             key={`role-imp-${player.id}`}
             className="animate-pop-in my-auto flex flex-col items-center py-4"
           >
-            <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-[#F97316]/20 text-[#F97316]">
+            <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-[#FF6B35]/20 text-[#FF6B35]">
               <ShieldAlert className="h-9 w-9" />
             </div>
-            <span className="mt-4 rounded-full bg-[#F97316]/20 px-3.5 py-1 text-xs font-extrabold uppercase tracking-widest text-[#F97316]">
+            <span className="mt-4 rounded-full bg-[#FF6B35]/20 px-3.5 py-1 text-xs font-extrabold uppercase tracking-widest text-[#FF6B35]">
               {player.name}
             </span>
-            <h2 className="font-display mt-3 text-4xl font-extrabold text-[#F97316] sm:text-5xl">
+            <h2 className="font-display mt-3 text-4xl font-extrabold text-[#FF6B35] sm:text-5xl">
               És o Impostor!
             </h2>
 
             {showCategoryToImpostor ? (
-              <div className="mt-5 w-full rounded-2xl border border-[#19D8F2]/30 bg-[#07131D] px-4 py-3.5">
+              <div className="mt-5 w-full rounded-2xl border border-[#19D8F2]/30 bg-[#070B14] px-4 py-3.5">
                 <p className="text-[11px] font-bold uppercase tracking-wider text-[#19D8F2]">
                   Categoria do Baralho
                 </p>
-                <p className="font-display mt-1 text-xl font-extrabold text-[#F3FAFA]">
+                <p className="font-display mt-1 text-xl font-extrabold text-[#F8FAFC]">
                   {match.categoryName}
                 </p>
               </div>
             ) : (
-              <p className="mt-4 max-w-xs text-sm text-[#F3FAFA]/80">
+              <p className="mt-4 max-w-xs text-sm text-[#F8FAFC]/80">
                 Não sabes a palavra secreta. Ouve as pistas e disfarça!
               </p>
             )}
@@ -123,28 +123,28 @@ export function ImpostorDistribute({
             key={`role-cit-${player.id}`}
             className="animate-pop-in my-auto flex flex-col items-center py-4"
           >
-            <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-[#00E5C4]/15 text-[#00E5C4]">
+            <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-[#00F5D4]/15 text-[#00F5D4]">
               <ShieldCheck className="h-9 w-9" />
             </div>
-            <span className="mt-4 rounded-full bg-[#00E5C4]/15 px-3.5 py-1 text-xs font-extrabold uppercase tracking-widest text-[#00E5C4]">
+            <span className="mt-4 rounded-full bg-[#00F5D4]/15 px-3.5 py-1 text-xs font-extrabold uppercase tracking-widest text-[#00F5D4]">
               Inocente · {player.name}
             </span>
 
-            <p className="mt-4 text-xs font-semibold uppercase tracking-widest text-[#F3FAFA]/60">
+            <p className="mt-4 text-xs font-semibold uppercase tracking-widest text-[#F8FAFC]/60">
               Palavra Secreta
             </p>
-            <h2 className="font-display mt-2 break-words text-4xl font-extrabold leading-tight text-[#F3FAFA] sm:text-5xl">
+            <h2 className="font-display mt-2 break-words text-4xl font-extrabold leading-tight text-[#F8FAFC] sm:text-5xl">
               {match.secretWord}
             </h2>
 
-            <span className="mt-4 rounded-full border border-[#19D8F2]/30 bg-[#07131D] px-3.5 py-1 text-xs font-bold text-[#19D8F2]">
+            <span className="mt-4 rounded-full border border-[#19D8F2]/30 bg-[#070B14] px-3.5 py-1 text-xs font-bold text-[#19D8F2]">
               {match.categoryName}
             </span>
           </div>
         )}
 
         {/* Inside Card Footer Guidance */}
-        <div className="rounded-2xl bg-[#07131D]/85 px-4 py-2.5 text-xs font-medium text-[#F3FAFA]/75">
+        <div className="rounded-2xl bg-[#070B14]/85 px-4 py-2.5 text-xs font-medium text-[#F8FAFC]/75">
           {!revealed
             ? 'Certifica-te de que ninguém está a espreitar.'
             : isImpostor
@@ -155,13 +155,13 @@ export function ImpostorDistribute({
         </div>
       </div>
 
-      {/* Single Primary Thumb Button */}
+      {/* Single Primary Pill Button */}
       <div className="py-3">
         {!revealed ? (
           <button
             type="button"
             onClick={handleReveal}
-            className="flex min-h-[60px] w-full items-center justify-center gap-2.5 rounded-2xl bg-[#00E5C4] px-6 font-display text-lg font-extrabold text-[#07131D] shadow-[0_8px_28px_rgba(0,229,196,0.28)] transition active:scale-[0.98]"
+            className="flex min-h-[58px] w-full items-center justify-center gap-2.5 rounded-full bg-[#00F5D4] px-6 font-display text-base font-extrabold text-[#070B14] shadow-[0_8px_28px_-4px_rgba(0,245,212,0.42)] transition active:scale-[0.98]"
           >
             <Eye className="h-5 w-5" />
             Ver o Meu Papel
@@ -170,7 +170,7 @@ export function ImpostorDistribute({
           <button
             type="button"
             onClick={handleHideAndNext}
-            className="flex min-h-[60px] w-full items-center justify-center gap-2.5 rounded-2xl border-2 border-[#00E5C4] bg-[#0B1B28] px-6 font-display text-lg font-extrabold text-[#00E5C4] transition active:scale-[0.98] active:bg-[#00E5C4] active:text-[#07131D]"
+            className="glass-card flex min-h-[58px] w-full items-center justify-center gap-2.5 rounded-full border-2 border-[#00F5D4] px-6 font-display text-base font-extrabold text-[#00F5D4] transition active:scale-[0.98] active:bg-[#00F5D4] active:text-[#070B14]"
           >
             <EyeOff className="h-5 w-5" />
             {isLast ? 'Esconder e Começar Debate' : 'Esconder e Passar'}

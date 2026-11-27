@@ -115,21 +115,21 @@ export function KiyumiPlay({
         : 'text-5xl sm:text-6xl';
 
   return (
-    <div className="fixed inset-0 z-30 overflow-y-auto bg-[#07131D]">
+    <div className="fixed inset-0 z-30 overflow-y-auto bg-[#070B14]">
       <div className="mx-auto flex min-h-[100dvh] w-full max-w-2xl flex-col px-3.5 pt-safe pb-safe">
         {/* Full-screen feedback flash overlay */}
         {feedback && (
           <div
             key={feedback.key}
             className={`animate-feedback-flash pointer-events-none fixed inset-0 z-40 flex items-center justify-center ${
-              feedback.type === 'correct' ? 'bg-[#00E5C4]/25' : 'bg-[#F97316]/25'
+              feedback.type === 'correct' ? 'bg-[#00F5D4]/25' : 'bg-[#FF6B35]/25'
             }`}
           >
             <span
               className={`font-display rounded-full px-6 py-2 text-2xl font-extrabold uppercase tracking-wider ${
                 feedback.type === 'correct'
-                  ? 'bg-[#00E5C4] text-[#07131D]'
-                  : 'bg-[#F97316] text-[#07131D]'
+                  ? 'bg-[#00F5D4] text-[#070B14]'
+                  : 'bg-[#FF6B35] text-[#070B14]'
               }`}
             >
               {feedback.type === 'correct' ? 'ACERTOU! +1' : 'PASSOU'}
@@ -139,18 +139,18 @@ export function KiyumiPlay({
 
         {/* Minimal Top Strip: Score + 30s Timer + Single Pause Button */}
         <div className="flex w-full items-center justify-between gap-2 py-2">
-          <div className="flex items-center gap-1.5 rounded-full border border-[#00E5C4]/35 bg-[#0B1B28] px-3.5 py-1.5">
-            <CheckCircle2 className="h-4 w-4 text-[#00E5C4]" />
-            <span className="font-display text-base font-extrabold tabular-nums text-[#00E5C4]">
+          <div className="glass-card flex items-center gap-1.5 rounded-full border-[#00F5D4]/35 px-3.5 py-1.5">
+            <CheckCircle2 className="h-4 w-4 text-[#00F5D4]" />
+            <span className="font-display text-base font-extrabold tabular-nums text-[#00F5D4]">
               {score}
             </span>
           </div>
 
           <div
-            className={`flex items-center gap-2 rounded-full border-2 bg-[#0B1B28] px-4 py-1 ${
+            className={`glass-card flex items-center gap-2 rounded-full border-2 px-4 py-1 ${
               isUrgent
-                ? 'animate-urgent-pulse border-[#F97316] text-[#F97316]'
-                : 'border-[#19D8F2]/50 text-[#19D8F2]'
+                ? 'animate-urgent-pulse border-[#FF6B35] text-[#FF6B35]'
+                : 'border-[#00F5D4]/50 text-[#00F5D4]'
             }`}
           >
             <span className="font-display text-2xl font-extrabold tabular-nums leading-none">
@@ -165,9 +165,9 @@ export function KiyumiPlay({
               setPaused((p) => !p);
             }}
             aria-label={paused ? 'Retomar' : 'Pausar'}
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-[#F3FAFA]/15 bg-[#0B1B28] text-[#F3FAFA] transition active:scale-95"
+            className="glass-card flex h-11 w-11 items-center justify-center rounded-full text-[#F8FAFC] transition active:scale-95"
           >
-            {paused ? <Play className="h-4 w-4 text-[#00E5C4]" /> : <Pause className="h-4 w-4" />}
+            {paused ? <Play className="h-4 w-4 text-[#00F5D4]" /> : <Pause className="h-4 w-4" />}
           </button>
         </div>
 
@@ -180,15 +180,17 @@ export function KiyumiPlay({
                 setHideWord((h) => !h);
               }
             }}
-            className={`relative flex min-h-[300px] flex-1 cursor-pointer flex-col justify-between rounded-[2rem] border-2 bg-[#0B1B28] px-6 py-6 text-center shadow-2xl transition-colors ${
-              isUrgent ? 'border-[#F97316]' : 'border-[#00E5C4]/45'
+            className={`glass-card relative flex min-h-[300px] flex-1 cursor-pointer flex-col justify-between rounded-[2rem] border-2 px-6 py-6 text-center shadow-2xl transition-colors ${
+              isUrgent
+                ? 'border-[#FF6B35] shadow-[0_0_28px_rgba(255,107,53,0.22)]'
+                : 'border-[#00F5D4]/45 shadow-[0_8px_32px_-4px_rgba(0,245,212,0.18)]'
             }`}
           >
             {/* Thin Timer Progress Bar integrated inside top of card */}
-            <div className="mx-1 h-1.5 overflow-hidden rounded-full bg-[#07131D]">
+            <div className="mx-1 h-1.5 overflow-hidden rounded-full bg-[#070B14]">
               <div
                 className={`h-full rounded-full transition-all duration-500 ease-linear ${
-                  isUrgent ? 'bg-[#F97316]' : 'bg-[#19D8F2]'
+                  isUrgent ? 'bg-[#FF6B35]' : 'bg-[#00F5D4]'
                 }`}
                 style={{ width: `${progress * 100}%` }}
               />
@@ -196,11 +198,11 @@ export function KiyumiPlay({
 
             {/* Inside Card Header */}
             <div className="pt-3">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#07131D] px-3.5 py-1 text-xs font-bold text-[#19D8F2]">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#070B14]/85 px-3.5 py-1 font-display text-xs font-bold text-[#00F5D4]">
                 {mode === 'mimica' ? (
-                  <User className="h-3.5 w-3.5 text-[#00E5C4]" />
+                  <User className="h-3.5 w-3.5 text-[#00FFA3]" />
                 ) : (
-                  <MessageCircle className="h-3.5 w-3.5 text-[#F97316]" />
+                  <MessageCircle className="h-3.5 w-3.5 text-[#FF6B35]" />
                 )}
                 {deckName} · {mode === 'mimica' ? 'Mímica / Palco' : 'Modo Descreve'}
               </span>
@@ -210,7 +212,7 @@ export function KiyumiPlay({
             <div className="my-auto flex flex-col items-center justify-center py-4">
               {paused ? (
                 <div className="space-y-4">
-                  <p className="font-display text-3xl font-extrabold text-[#19D8F2]">EM PAUSA</p>
+                  <p className="font-display text-3xl font-extrabold text-[#00F5D4]">EM PAUSA</p>
                   <div className="flex flex-col gap-2.5 sm:flex-row">
                     <button
                       type="button"
@@ -219,7 +221,7 @@ export function KiyumiPlay({
                         sound.tap();
                         setPaused(false);
                       }}
-                      className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-2xl bg-[#00E5C4] px-6 font-display text-base font-extrabold text-[#07131D]"
+                      className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-[#00F5D4] px-6 font-display text-base font-extrabold text-[#070B14]"
                     >
                       <Play className="h-5 w-5 fill-current" />
                       Retomar
@@ -231,7 +233,7 @@ export function KiyumiPlay({
                         sound.tap();
                         onAbort();
                       }}
-                      className="inline-flex min-h-[48px] items-center justify-center rounded-2xl border border-[#F97316]/50 bg-[#07131D] px-6 text-sm font-bold text-[#F97316]"
+                      className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-[#FF6B35]/55 bg-[#070B14] px-6 font-display text-sm font-bold text-[#FF6B35]"
                     >
                       Sair da Ronda
                     </button>
@@ -239,16 +241,16 @@ export function KiyumiPlay({
                 </div>
               ) : hideWord ? (
                 <div className="space-y-2">
-                  <EyeOff className="mx-auto h-10 w-10 text-[#19D8F2]/70" />
-                  <p className="font-display text-2xl font-extrabold text-[#F3FAFA]/65">
+                  <EyeOff className="mx-auto h-10 w-10 text-[#00F5D4]/70" />
+                  <p className="font-display text-2xl font-extrabold text-[#F8FAFC]/65">
                     Palavra escondida
                   </p>
-                  <p className="text-xs text-[#19D8F2]">Toca na carta para revelar</p>
+                  <p className="text-xs text-[#00F5D4]">Toca na carta para revelar</p>
                 </div>
               ) : (
                 <h2
                   key={currentWord}
-                  className={`animate-pop-in font-display break-words font-extrabold leading-tight tracking-tight text-[#F3FAFA] ${wordSizeClass}`}
+                  className={`animate-pop-in font-display break-words font-extrabold leading-tight tracking-tight text-[#F8FAFC] ${wordSizeClass}`}
                 >
                   {currentWord}
                 </h2>
@@ -256,18 +258,18 @@ export function KiyumiPlay({
             </div>
 
             {/* Inside Card Footer Rule Hint */}
-            <div className="rounded-2xl bg-[#07131D]/85 px-4 py-2.5 text-xs font-medium text-[#F3FAFA]/80">
+            <div className="rounded-2xl bg-[#070B14]/80 px-4 py-2.5 text-xs font-medium text-[#B9CAC4]">
               {paused ? (
                 'Cronómetro parado'
               ) : mode === 'mimica' ? (
                 <>
                   Representa em pé com gestos ·{' '}
-                  <span className="text-[#19D8F2]">Toca na carta para esconder</span>
+                  <span className="text-[#00F5D4]">Toca na carta para esconder</span>
                 </>
               ) : (
                 <>
                   Explica por voz —{' '}
-                  <strong className="text-[#F97316]">
+                  <strong className="text-[#FF6B35]">
                     proibido dizer palavras escritas no ecrã!
                   </strong>
                 </>
@@ -276,13 +278,13 @@ export function KiyumiPlay({
           </div>
         </div>
 
-        {/* Only 2 Clean Thumb-Zone Buttons */}
+        {/* Only 2 Clean Pill Thumb-Zone Buttons */}
         <div className="grid w-full grid-cols-2 gap-3 pb-2 pt-2">
           <button
             type="button"
             disabled={paused}
             onClick={() => recordAction('passed')}
-            className="flex min-h-[68px] items-center justify-center gap-2 rounded-2xl border-2 border-[#F97316] bg-[#0B1B28] px-4 font-display text-base font-extrabold uppercase tracking-wide text-[#F97316] transition active:scale-[0.97] active:bg-[#F97316] active:text-[#07131D] disabled:opacity-40 sm:min-h-[76px]"
+            className="glass-card flex min-h-[64px] items-center justify-center gap-2 rounded-full border-2 border-[#FF6B35] px-4 font-display text-base font-extrabold uppercase tracking-wide text-[#FF6B35] transition active:scale-[0.97] active:bg-[#FF6B35] active:text-[#070B14] disabled:opacity-40 sm:min-h-[70px]"
           >
             <SkipForward className="h-5 w-5" />
             Passar
@@ -292,7 +294,7 @@ export function KiyumiPlay({
             type="button"
             disabled={paused}
             onClick={() => recordAction('correct')}
-            className="flex min-h-[68px] items-center justify-center gap-2 rounded-2xl border-2 border-[#00E5C4] bg-[#00E5C4] px-4 font-display text-base font-extrabold uppercase tracking-wide text-[#07131D] shadow-[0_8px_28px_rgba(0,229,196,0.28)] transition active:scale-[0.97] disabled:opacity-40 sm:min-h-[76px]"
+            className="flex min-h-[64px] items-center justify-center gap-2 rounded-full bg-[#00F5D4] px-4 font-display text-base font-extrabold uppercase tracking-wide text-[#070B14] shadow-[0_8px_28px_-4px_rgba(0,245,212,0.42)] transition active:scale-[0.97] disabled:opacity-40 sm:min-h-[70px]"
           >
             <CheckCircle2 className="h-5 w-5 stroke-[2.5]" />
             Acertou +1

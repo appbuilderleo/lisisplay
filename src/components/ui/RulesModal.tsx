@@ -39,14 +39,14 @@ export function RulesModal({ isOpen, initialTab, onClose }: RulesModalProps) {
             sound.tap();
             onClose();
           }}
-          className="h-13 min-h-[48px] w-full rounded-2xl bg-[#00E5C4] font-display text-base font-extrabold text-[#07131D] transition active:scale-[0.98]"
+          className="h-13 min-h-[52px] w-full rounded-full bg-[#00F5D4] font-display text-base font-extrabold text-[#070B14] shadow-[0_8px_24px_-4px_rgba(0,245,212,0.35)] transition active:scale-[0.98]"
         >
           Entendido, vamos jogar!
         </button>
       }
     >
       {/* Tabs */}
-      <div className="mb-4 grid grid-cols-4 gap-1.5 rounded-2xl bg-[#07131D] p-1.5">
+      <div className="mb-4 grid grid-cols-4 gap-1.5 rounded-full bg-[#070B14] p-1.5">
         {TABS.map((tab) => {
           const selected = activeTab === tab.id;
           return (
@@ -57,10 +57,10 @@ export function RulesModal({ isOpen, initialTab, onClose }: RulesModalProps) {
                 sound.tap();
                 setActiveTab(tab.id);
               }}
-              className={`min-h-[44px] rounded-xl px-2 text-xs font-bold transition ${
+              className={`min-h-[40px] rounded-full px-2 font-display text-xs font-extrabold transition ${
                 selected
-                  ? 'bg-[#00E5C4] text-[#07131D]'
-                  : 'text-[#F3FAFA]/70 hover:text-[#F3FAFA]'
+                  ? 'bg-[#00F5D4] text-[#070B14]'
+                  : 'text-[#94A3B8] hover:text-[#F8FAFC]'
               }`}
             >
               {tab.label}
@@ -71,13 +71,13 @@ export function RulesModal({ isOpen, initialTab, onClose }: RulesModalProps) {
 
       {/* Brand showcase on General tab using official logo.png */}
       {activeTab === 'geral' && (
-        <div className="mb-4 flex flex-col items-center rounded-2xl bg-[#F3FAFA] px-6 py-5 text-center">
+        <div className="mb-4 flex flex-col items-center rounded-2xl bg-[#F8FAFC] px-6 py-5 text-center">
           <img
             src="/logo.png"
             alt="Lisis Play — A diversão é estar juntos."
             className="h-24 w-auto object-contain"
           />
-          <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[#07131D] px-3 py-1 text-[11px] font-semibold text-[#00E5C4]">
+          <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[#070B14] px-3 py-1 text-[11px] font-bold text-[#00F5D4]">
             <WifiOff className="h-3.5 w-3.5" />
             PWA · Modo Roda (1 Celular · Offline)
           </div>
@@ -87,28 +87,28 @@ export function RulesModal({ isOpen, initialTab, onClose }: RulesModalProps) {
       {/* Rule Details */}
       <div className="space-y-4">
         <div>
-          <h3 className="font-display text-xl font-extrabold text-[#F3FAFA]">{current.title}</h3>
-          <p className="mt-1 text-sm text-[#19D8F2]">{current.tagline}</p>
+          <h3 className="font-display text-xl font-extrabold text-[#F8FAFC]">{current.title}</h3>
+          <p className="mt-1 text-sm text-[#00F5D4]">{current.tagline}</p>
         </div>
 
         <ol className="space-y-2.5">
           {current.steps.map((step, index) => (
             <li
               key={index}
-              className="flex items-start gap-3 rounded-2xl border border-[#F3FAFA]/10 bg-[#07131D]/70 p-3.5"
+              className="flex items-start gap-3 rounded-2xl bg-[#1B2029] p-3.5"
             >
-              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#00E5C4]/15 font-display text-xs font-extrabold text-[#00E5C4]">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#00F5D4]/15 font-display text-xs font-extrabold text-[#00F5D4]">
                 {index + 1}
               </span>
-              <p className="text-sm leading-relaxed text-[#F3FAFA]/90">{step}</p>
+              <p className="text-sm leading-relaxed text-[#DFE2F0]">{step}</p>
             </li>
           ))}
         </ol>
 
-        <div className="flex items-start gap-3 rounded-2xl border border-[#F97316]/35 bg-[#F97316]/10 p-3.5">
-          <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-[#F97316]" />
-          <p className="text-xs leading-relaxed text-[#F3FAFA]/90">
-            <strong className="text-[#F97316]">Dica: </strong>
+        <div className="flex items-start gap-3 rounded-2xl border border-[#FF6B35]/35 bg-[#FF6B35]/10 p-3.5">
+          <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-[#FF6B35]" />
+          <p className="text-xs leading-relaxed text-[#DFE2F0]">
+            <strong className="text-[#FF6B35]">Dica: </strong>
             {current.tip}
           </p>
         </div>

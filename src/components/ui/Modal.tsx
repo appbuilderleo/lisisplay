@@ -28,7 +28,7 @@ export function Modal({ isOpen, onClose, title, children, footer }: ModalProps) 
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-[#07131D]/85 p-3 backdrop-blur-sm sm:items-center sm:p-4"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-[#070B14]/82 p-3 backdrop-blur-md sm:items-center sm:p-4"
       role="dialog"
       aria-modal="true"
       aria-label={title}
@@ -39,9 +39,9 @@ export function Modal({ isOpen, onClose, title, children, footer }: ModalProps) 
         }
       }}
     >
-      <div className="animate-slide-up flex max-h-[88dvh] w-full max-w-lg flex-col overflow-hidden rounded-3xl border border-[#19D8F2]/25 bg-[#0B1B28] shadow-2xl">
-        <div className="flex items-center justify-between border-b border-[#F3FAFA]/10 px-5 py-4">
-          <h2 className="font-display text-lg font-extrabold text-[#F3FAFA]">{title}</h2>
+      <div className="animate-slide-up flex max-h-[88dvh] w-full max-w-[440px] flex-col overflow-hidden rounded-3xl border border-[#00F5D4]/25 bg-[#0F172A] shadow-2xl">
+        <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+          <h2 className="font-display text-lg font-extrabold text-[#F8FAFC]">{title}</h2>
           <button
             type="button"
             onClick={() => {
@@ -49,7 +49,7 @@ export function Modal({ isOpen, onClose, title, children, footer }: ModalProps) 
               onClose();
             }}
             aria-label="Fechar"
-            className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#F3FAFA]/12 bg-[#07131D] text-[#F3FAFA] transition active:scale-95 hover:border-[#00E5C4]/50"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1B2029] text-[#F8FAFC] transition active:scale-95 hover:bg-[#262A34]"
           >
             <X className="h-5 w-5" />
           </button>
@@ -58,7 +58,7 @@ export function Modal({ isOpen, onClose, title, children, footer }: ModalProps) 
         <div className="flex-1 overflow-y-auto px-5 py-4">{children}</div>
 
         {footer && (
-          <div className="border-t border-[#F3FAFA]/10 bg-[#07131D]/60 px-5 py-3.5 pb-safe">
+          <div className="border-t border-white/10 bg-[#070B14]/60 px-5 py-3.5 pb-safe">
             {footer}
           </div>
         )}

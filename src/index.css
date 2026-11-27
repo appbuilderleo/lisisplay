@@ -1,12 +1,30 @@
 @import "tailwindcss";
 
 @theme {
-  --color-night: #07131D;
-  --color-surface: #0B1B28;
-  --color-turquoise: #00E5C4;
+  /* Electric Social Arcade — Lisis Play Official Palette */
+  --color-obsidian: #070B14;
+  --color-navy: #0F172A;
+  --color-container-low: #171C25;
+  --color-container: #1B2029;
+  --color-container-high: #262A34;
+
+  --color-electric-cyan: #00F5D4;
+  --color-neon-mint: #00FFA3;
+  --color-signal-cyan: #19D8F2;
+  --color-flame-orange: #FF6B35;
+  --color-vivid-crimson: #FF3366;
+
+  --color-text-primary: #F8FAFC;
+  --color-text-variant: #B9CAC4;
+  --color-text-muted: #94A3B8;
+
+  /* Legacy aliases for smooth consistency */
+  --color-night: #070B14;
+  --color-surface: #0F172A;
+  --color-turquoise: #00F5D4;
   --color-cyan-signal: #19D8F2;
-  --color-mist: #F3FAFA;
-  --color-energy: #F97316;
+  --color-mist: #F8FAFC;
+  --color-energy: #FF6B35;
 
   --font-display: 'Syne', system-ui, -apple-system, sans-serif;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -14,12 +32,16 @@
 
 :root {
   color-scheme: dark;
-  --lp-bg: #07131D;
-  --lp-surface: #0B1B28;
-  --lp-turquoise: #00E5C4;
+  --lp-bg: #070B14;
+  --lp-surface: #0F172A;
+  --lp-card: rgba(15, 23, 42, 0.76);
+  --lp-card-border: rgba(0, 245, 212, 0.18);
+  --lp-turquoise: #00F5D4;
+  --lp-mint: #00FFA3;
   --lp-cyan: #19D8F2;
-  --lp-mist: #F3FAFA;
-  --lp-orange: #F97316;
+  --lp-mist: #F8FAFC;
+  --lp-orange: #FF6B35;
+  --lp-crimson: #FF3366;
 }
 
 html {
@@ -52,7 +74,23 @@ body {
   font-family: 'Syne', system-ui, -apple-system, sans-serif;
 }
 
-/* Ergonomic touch targets and no accidental text selection during gameplay */
+/* Glassmorphic surface utility */
+.glass-card {
+  background: rgba(15, 23, 42, 0.74);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-card-active {
+  background: rgba(15, 23, 42, 0.84);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(0, 245, 212, 0.45);
+  box-shadow: 0 8px 28px -4px rgba(0, 245, 212, 0.2);
+}
+
+/* Ergonomic touch targets */
 button,
 [role="button"] {
   touch-action: manipulation;
@@ -60,7 +98,7 @@ button,
   -webkit-user-select: none;
 }
 
-/* Safe area padding helpers for modern notched smartphones */
+/* Safe area padding helpers */
 .pb-safe {
   padding-bottom: max(1rem, env(safe-area-inset-bottom));
 }
@@ -69,11 +107,20 @@ button,
   padding-top: max(0.75rem, env(safe-area-inset-top));
 }
 
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* Custom animations */
 @keyframes popIn {
   0% {
     opacity: 0;
-    transform: scale(0.88) translateY(8px);
+    transform: scale(0.9) translateY(8px);
   }
   100% {
     opacity: 1;
@@ -99,11 +146,11 @@ button,
 @keyframes urgentPulse {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.45);
+    box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.5);
   }
   50% {
     transform: scale(1.03);
-    box-shadow: 0 0 0 12px rgba(249, 115, 22, 0);
+    box-shadow: 0 0 0 12px rgba(255, 107, 53, 0);
   }
 }
 
@@ -147,21 +194,21 @@ button,
   animation: slideUp 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-/* Subtle custom scrollbar matching the strict palette */
+/* Subtle custom scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #07131D;
+  background: #070B14;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(25, 216, 242, 0.25);
+  background: rgba(0, 245, 212, 0.22);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 229, 196, 0.45);
+  background: rgba(0, 245, 212, 0.45);
 }

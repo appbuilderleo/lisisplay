@@ -1,10 +1,16 @@
 import { useEffect, useState } from 'react';
 import { AppView, ConfirmDialogState, GameId, RulesTab } from './types';
 import { sound } from './lib/audio';
-import { loadSoundPreference, saveSoundPreference } from './lib/storage';
+import {
+  loadFavoriteGames,
+  loadSoundPreference,
+  saveFavoriteGames,
+  saveSoundPreference,
+} from './lib/storage';
 import { Header } from './components/ui/Header';
 import { RulesModal } from './components/ui/RulesModal';
 import { ConfirmModal } from './components/ui/ConfirmModal';
+import { GroupModal } from './components/ui/GroupModal';
 import { SplashScreen } from './components/splash/SplashScreen';
 import { HubScreen } from './components/hub/HubScreen';
 import { KiyumiGame } from './components/kiyumi/KiyumiGame';
@@ -12,7 +18,7 @@ import { ImpostorGame } from './components/impostor/ImpostorGame';
 import { ZoeGame } from './components/zoe/ZoeGame';
 
 const GAME_META: Record<GameId, { title: string; subtitle: string }> = {
-  kiyumi: { title: 'Kiyumi', subtitle: 'Mímica Rápida · 30s' },
+  kiyumi: { title: 'Kiyumi', subtitle: 'Mímica & Descreve · 30s' },
   impostor: { title: 'O Impostor', subtitle: 'Dedução Social · Clássico' },
   zoe: { title: 'Zoe', subtitle: 'Quem na Roda?' },
 };
@@ -20,7 +26,9 @@ const GAME_META: Record<GameId, { title: string; subtitle: string }> = {
 export function App() {
   const [view, setView] = useState<AppView>('splash');
   const [soundEnabled, setSoundEnabled] = useState<boolean>(() => loadSoundPreference());
+  const [favorites, setFavorites] = useState<GameId[]>(() => loadFavoriteGames());
   const [rulesOpen, setRulesOpen] = useState(false);
+  const [groupOpen, setGroupOpen] = useState(false);
   const [confirmDialog, setConfirmDialog] = useState<ConfirmDialogState | null>(null);
   const [impostorMatchActive, setImpostorMatchActive] = useState(false);
 
@@ -28,6 +36,10 @@ export function App() {
     sound.setEnabled(soundEnabled);
     saveSoundPreference(soundEnabled);
   }, [soundEnabled]);
+
+  useEffect(() => {
+    saveFavoriteGames(favorites);
+  }, [favorites]);
 
   const handleToggleSound = () => {
     const next = !soundEnabled;
@@ -37,6 +49,12 @@ export function App() {
       sound.unlock();
       sound.tap();
     }
+  };
+
+  const handleToggleFavorite = (gameId: GameId) => {
+    setFavorites((prev) =>
+      prev.includes(gameId) ? prev.filter((id) => id !== gameId) : [...prev, gameId],
+    );
   };
 
   const requestConfirm = (opts: {
@@ -82,9 +100,10 @@ export function App() {
   const activeMeta = view !== 'hub' ? GAME_META[view] : null;
 
   return (
-    <div className="min-h-[100dvh] w-full bg-[#07131D] text-[#F3FAFA]">
+    <div className="min-h-[100dvh] w-full bg-[#070B14] text-[#F8FAFC]">
       <Header
         showBack={view !== 'hub'}
+        showTelemetryStrip={view === 'hub'}
         title={activeMeta?.title}
         subtitle={activeMeta?.subtitle}
         onBack={handleBackToHub}
@@ -94,7 +113,15 @@ export function App() {
       />
 
       <main className="w-full">
-        {view === 'hub' && <HubScreen onSelectGame={(game) => setView(game)} />}
+        {view === 'hub' && (
+          <HubScreen
+            favorites={favorites}
+            onToggleFavorite={handleToggleFavorite}
+            onSelectGame={(game) => setView(game)}
+            onOpenRules={() => setRulesOpen(true)}
+            onOpenGroup={() => setGroupOpen(true)}
+          />
+        )}
         {view === 'kiyumi' && <KiyumiGame onRequestConfirm={requestConfirm} />}
         {view === 'impostor' && <ImpostorGame onActiveChange={setImpostorMatchActive} />}
         {view === 'zoe' && <ZoeGame />}
@@ -104,6 +131,11 @@ export function App() {
         isOpen={rulesOpen}
         initialTab={rulesInitialTab}
         onClose={() => setRulesOpen(false)}
+      />
+
+      <GroupModal
+        isOpen={groupOpen}
+        onClose={() => setGroupOpen(false)}
       />
 
       <ConfirmModal
