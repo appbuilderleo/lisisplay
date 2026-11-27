@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { ensureSchema, getPool } from './_lib/db';
+import { ensureSchema, getPool } from './_lib/db.js';
 
 const VALID_GAMES = new Set(['kiyumi', 'impostor', 'zoe', 'cubo']);
 

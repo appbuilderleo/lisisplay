@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { ensureSchema, getPool } from '../_lib/db';
-import { hashPassword, requireAdmin } from '../_lib/auth';
+import { ensureSchema, getPool } from '../_lib/db.js';
+import { hashPassword, requireAdmin } from '../_lib/auth.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const admin = requireAdmin(req);

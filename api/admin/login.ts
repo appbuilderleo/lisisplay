@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { ensureSchema, getPool } from '../_lib/db';
-import { signAdminToken, verifyPassword } from '../_lib/auth';
+import { ensureSchema, getPool } from '../_lib/db.js';
+import { signAdminToken, verifyPassword } from '../_lib/auth.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
@@ -8,8 +8,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    if (!process.env.DATABASE_URL) {
+      return res
+        .status(500)
+        .json({ error: 'Variável DATABASE_URL não está configurada na Vercel.' });
+    }
+
     await ensureSchema();
-    const { email, password } = (req.body || {}) as { email?: string; password?: string };
+    const rawBody = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : req.body || {};
+    const { email, password } = rawBody as { email?: string; password?: string };
 
     if (!email || !password) {
       return res.status(400).json({ error: 'Indica o email e a senha do administrador.' });

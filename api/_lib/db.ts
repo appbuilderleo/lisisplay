@@ -1,8 +1,10 @@
-import { Pool } from 'pg';
-import { hashPassword } from './auth';
+import pg from 'pg';
+import { hashPassword } from './auth.js';
+
+const { Pool } = pg;
 
 declare global {
-  var __lisisPool: Pool | undefined;
+  var __lisisPool: pg.Pool | undefined;
   var __lisisSchemaReady: Promise<void> | undefined;
 }
 
@@ -17,7 +19,7 @@ function buildConnectionUrl(rawUrl: string): string {
   }
 }
 
-export function getPool(): Pool {
+export function getPool(): pg.Pool {
   if (!globalThis.__lisisPool) {
     const rawUrl = process.env.DATABASE_URL;
     if (!rawUrl) {

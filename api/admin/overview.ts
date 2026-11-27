@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { ensureSchema, getPool } from '../_lib/db';
-import { requireAdmin } from '../_lib/auth';
+import { ensureSchema, getPool } from '../_lib/db.js';
+import { requireAdmin } from '../_lib/auth.js';
 
 function rangeToDays(range: string | undefined): number | null {
   switch (range) {
