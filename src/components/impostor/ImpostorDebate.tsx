@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { MessageSquare, Pause, Play, Plus, Vote } from 'lucide-react';
 import { ImpostorMatch, ImpostorPlayer } from '../../types';
 import { sound } from '../../lib/audio';
+import { getSyneFitStyle } from '../../lib/textFit';
 
 const INITIAL_DEBATE_SECONDS = 120; // 2:00 min
 
@@ -89,7 +90,10 @@ export function ImpostorDebate({ players, match, onGoToVote }: ImpostorDebatePro
             <p className="text-xs font-bold uppercase tracking-widest text-[#F8FAFC]/60">
               Começa a dar a primeira pista
             </p>
-            <h2 className="font-display mt-1.5 text-4xl font-extrabold text-[#00F5D4] sm:text-5xl">
+            <h2
+              style={getSyneFitStyle(firstSpeaker.name)}
+              className="font-display mt-1.5 w-full max-w-full break-words [overflow-wrap:anywhere] font-extrabold leading-[1.15] text-[#00F5D4]"
+            >
               {firstSpeaker.name}
             </h2>
           </div>

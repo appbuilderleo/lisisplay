@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { KiyumiMode, KiyumiRoundWord } from '../../types';
 import { sound } from '../../lib/audio';
+import { getSyneFitStyle } from '../../lib/textFit';
 import { useWakeLock } from '../../hooks/useWakeLock';
 
 const ROUND_SECONDS = 30;
@@ -109,13 +110,7 @@ export function KiyumiPlay({
   );
 
   const progress = Math.max(0, timeLeft / ROUND_SECONDS);
-
-  const wordSizeClass =
-    currentWord.length > 18
-      ? 'text-3xl sm:text-5xl'
-      : currentWord.length > 12
-        ? 'text-4xl sm:text-6xl'
-        : 'text-5xl sm:text-6xl';
+  const wordFitStyle = getSyneFitStyle(currentWord);
 
   return (
     <div className="fixed inset-0 z-30 overflow-y-auto bg-[#070B14]">
@@ -183,7 +178,7 @@ export function KiyumiPlay({
                 setHideWord((h) => !h);
               }
             }}
-            className={`glass-card relative flex min-h-[300px] flex-1 cursor-pointer flex-col justify-between rounded-[2rem] border-2 px-6 py-6 text-center shadow-2xl transition-colors ${
+            className={`glass-card relative flex min-h-[300px] w-full flex-1 cursor-pointer flex-col justify-between overflow-x-clip rounded-[2rem] border-2 px-5 py-6 text-center shadow-2xl transition-colors ${
               isUrgent
                 ? 'border-[#FF6B35] shadow-[0_0_28px_rgba(255,107,53,0.22)]'
                 : 'border-[#00F5D4]/45 shadow-[0_8px_32px_-4px_rgba(0,245,212,0.18)]'
@@ -212,7 +207,7 @@ export function KiyumiPlay({
             </div>
 
             {/* Inside Card Main Word */}
-            <div className="my-auto flex flex-col items-center justify-center py-4">
+            <div className="my-auto flex w-full min-w-0 flex-col items-center justify-center px-1 py-4">
               {paused ? (
                 <div className="space-y-4">
                   <p className="font-display text-3xl font-extrabold text-[#00F5D4]">EM PAUSA</p>
@@ -253,7 +248,8 @@ export function KiyumiPlay({
               ) : (
                 <h2
                   key={currentWord}
-                  className={`animate-pop-in font-display break-words font-extrabold leading-tight tracking-tight text-[#F8FAFC] ${wordSizeClass}`}
+                  style={wordFitStyle}
+                  className="animate-pop-in font-display w-full max-w-full break-words [overflow-wrap:anywhere] hyphens-auto font-extrabold leading-[1.15] tracking-tight text-[#F8FAFC]"
                 >
                   {currentWord}
                 </h2>

@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { RefreshCw, Settings2, ShieldAlert, Trophy } from 'lucide-react';
 import { ImpostorMatch, ImpostorPlayer } from '../../types';
 import { sound } from '../../lib/audio';
+import { getSyneFitStyle } from '../../lib/textFit';
 
 export type ImpostorOutcome = 'wrong-accusation' | 'impostor-guessed' | 'citizens-win';
 
@@ -87,7 +88,10 @@ export function ImpostorResult({
             <p className="text-[11px] font-bold uppercase tracking-widest text-[#19D8F2]">
               Palavra Secreta · {match.categoryName}
             </p>
-            <p className="font-display mt-1 text-3xl font-extrabold text-[#00F5D4]">
+            <p
+              style={getSyneFitStyle(match.secretWord)}
+              className="font-display mt-1 w-full max-w-full break-words [overflow-wrap:anywhere] hyphens-auto font-extrabold leading-[1.15] text-[#00F5D4]"
+            >
               {match.secretWord}
             </p>
           </div>

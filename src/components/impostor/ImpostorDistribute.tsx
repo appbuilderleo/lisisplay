@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Eye, EyeOff, ShieldAlert, ShieldCheck, Smartphone } from 'lucide-react';
 import { ImpostorMatch, ImpostorPlayer } from '../../types';
 import { sound } from '../../lib/audio';
+import { getSyneFitStyle } from '../../lib/textFit';
 
 interface ImpostorDistributeProps {
   players: ImpostorPlayer[];
@@ -48,7 +49,7 @@ export function ImpostorDistribute({
     <div className="mx-auto flex min-h-[calc(100dvh-68px)] w-full max-w-lg flex-col px-3.5 pb-safe pt-3">
       {/* GIANT OPEN CARD: Occupies ~75% of screen with ALL text inside */}
       <div
-        className={`relative flex min-h-[340px] flex-1 flex-col justify-between rounded-[2rem] border-2 bg-[#0F172A] px-6 py-6 text-center shadow-2xl transition-colors ${
+        className={`relative flex min-h-[340px] w-full flex-1 flex-col justify-between overflow-x-clip rounded-[2rem] border-2 bg-[#0F172A] px-5 py-6 text-center shadow-2xl transition-colors ${
           !revealed
             ? 'border-[#19D8F2]/40'
             : isImpostor
@@ -84,7 +85,10 @@ export function ImpostorDistribute({
             <p className="mt-6 text-xs font-bold uppercase tracking-widest text-[#19D8F2]">
               Passa o celular para
             </p>
-            <h2 className="font-display mt-2 break-words text-4xl font-extrabold text-[#F8FAFC] sm:text-5xl">
+            <h2
+              style={getSyneFitStyle(player.name)}
+              className="font-display mt-2 w-full max-w-full break-words [overflow-wrap:anywhere] hyphens-auto font-extrabold leading-[1.15] text-[#F8FAFC]"
+            >
               {player.name}
             </h2>
           </div>
@@ -133,7 +137,10 @@ export function ImpostorDistribute({
             <p className="mt-4 text-xs font-semibold uppercase tracking-widest text-[#F8FAFC]/60">
               Palavra Secreta
             </p>
-            <h2 className="font-display mt-2 break-words text-4xl font-extrabold leading-tight text-[#F8FAFC] sm:text-5xl">
+            <h2
+              style={getSyneFitStyle(match.secretWord)}
+              className="font-display mt-2 w-full max-w-full break-words [overflow-wrap:anywhere] hyphens-auto font-extrabold leading-[1.15] text-[#F8FAFC]"
+            >
               {match.secretWord}
             </h2>
 
