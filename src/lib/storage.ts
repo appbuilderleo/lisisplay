@@ -1,8 +1,10 @@
-import { GameId, ImpostorPlayer } from '../types';
+import { CubeSolveRecord, GameId, ImpostorPlayer } from '../types';
 
 const SOUND_KEY = 'lisis_play_sound_enabled';
 const IMPOSTOR_PLAYERS_KEY = 'lisis_play_impostor_players';
 const FAVORITES_KEY = 'lisis_play_favorite_games';
+const CUBE_HISTORY_KEY = 'lisis_play_cube_history';
+const CUBE_PLAYER_NAME_KEY = 'lisis_play_cube_player_name';
 
 export const DEFAULT_IMPOSTOR_PLAYERS: ImpostorPlayer[] = [
   { id: 'p1', name: 'Amina' },
@@ -64,7 +66,8 @@ export function loadFavoriteGames(): GameId[] {
     const parsed = JSON.parse(raw);
     if (Array.isArray(parsed)) {
       return parsed.filter(
-        (id): id is GameId => id === 'kiyumi' || id === 'impostor' || id === 'zoe',
+        (id): id is GameId =>
+          id === 'kiyumi' || id === 'impostor' || id === 'zoe' || id === 'cubo',
       );
     }
     return [];
@@ -76,6 +79,48 @@ export function loadFavoriteGames(): GameId[] {
 export function saveFavoriteGames(ids: GameId[]): void {
   try {
     localStorage.setItem(FAVORITES_KEY, JSON.stringify(ids));
+  } catch {
+    // Ignore storage errors
+  }
+}
+
+export function loadCubeHistory(): CubeSolveRecord[] {
+  try {
+    const raw = localStorage.getItem(CUBE_HISTORY_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(
+      (r): r is CubeSolveRecord =>
+        typeof r?.id === 'string' &&
+        (r?.size === 2 || r?.size === 3) &&
+        typeof r?.timeMs === 'number' &&
+        typeof r?.moves === 'number',
+    );
+  } catch {
+    return [];
+  }
+}
+
+export function saveCubeHistory(records: CubeSolveRecord[]): void {
+  try {
+    localStorage.setItem(CUBE_HISTORY_KEY, JSON.stringify(records.slice(0, 60)));
+  } catch {
+    // Ignore storage errors
+  }
+}
+
+export function loadCubePlayerName(): string {
+  try {
+    return localStorage.getItem(CUBE_PLAYER_NAME_KEY) || '';
+  } catch {
+    return '';
+  }
+}
+
+export function saveCubePlayerName(name: string): void {
+  try {
+    localStorage.setItem(CUBE_PLAYER_NAME_KEY, name);
   } catch {
     // Ignore storage errors
   }

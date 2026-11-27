@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { AppView, ConfirmDialogState, GameId, RulesTab } from './types';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { AppView, ConfirmDialogState, CubeSize, GameId, RulesTab } from './types';
 import { sound } from './lib/audio';
 import {
   loadFavoriteGames,
@@ -17,14 +17,32 @@ import { KiyumiGame } from './components/kiyumi/KiyumiGame';
 import { ImpostorGame } from './components/impostor/ImpostorGame';
 import { ZoeGame } from './components/zoe/ZoeGame';
 
+// Code-splitting do motor 3D Three.js para manter o carregamento inicial ultra-leve
+const CuboMagicoGame = lazy(() =>
+  import('./components/cubo/CuboMagicoGame').then((m) => ({ default: m.CuboMagicoGame })),
+);
+
 const GAME_META: Record<GameId, { title: string; subtitle: string }> = {
   kiyumi: { title: 'Kiyumi', subtitle: 'Mímica & Descreve · 30s' },
   impostor: { title: 'O Impostor', subtitle: 'Dedução Social · Clássico' },
   zoe: { title: 'Zoe', subtitle: 'Quem na Roda?' },
+  cubo: { title: 'Cubo Mágico', subtitle: '3D Digital · Solo & Duelo' },
 };
 
+function parseInitialCubeRoom(): { code: string; size?: CubeSize; seed?: string } | null {
+  if (typeof window === 'undefined') return null;
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get('cubo')?.trim().toUpperCase();
+  if (!code || code.length < 3) return null;
+  const rawSize = params.get('size');
+  const size: CubeSize | undefined = rawSize === '2' ? 2 : rawSize === '3' ? 3 : undefined;
+  const seed = params.get('seed')?.trim().toUpperCase() || undefined;
+  return { code: code.slice(0, 4), size, seed };
+}
+
 export function App() {
-  const [view, setView] = useState<AppView>('splash');
+  const initialCubeRoom = useMemo(() => parseInitialCubeRoom(), []);
+  const [view, setView] = useState<AppView>(() => (initialCubeRoom ? 'cubo' : 'splash'));
   const [soundEnabled, setSoundEnabled] = useState<boolean>(() => loadSoundPreference());
   const [favorites, setFavorites] = useState<GameId[]>(() => loadFavoriteGames());
   const [rulesOpen, setRulesOpen] = useState(false);
@@ -125,6 +143,20 @@ export function App() {
         {view === 'kiyumi' && <KiyumiGame onRequestConfirm={requestConfirm} />}
         {view === 'impostor' && <ImpostorGame onActiveChange={setImpostorMatchActive} />}
         {view === 'zoe' && <ZoeGame />}
+        {view === 'cubo' && (
+          <Suspense
+            fallback={
+              <div className="flex min-h-[70dvh] flex-col items-center justify-center gap-3 px-6 text-center">
+                <div className="h-12 w-12 animate-spin rounded-full border-4 border-[#00F5D4]/20 border-t-[#00F5D4]" />
+                <p className="font-display text-sm font-bold text-[#00F5D4]">
+                  A carregar Cubo Mágico 3D...
+                </p>
+              </div>
+            }
+          >
+            <CuboMagicoGame initialRoomParams={initialCubeRoom} />
+          </Suspense>
+        )}
       </main>
 
       <RulesModal
@@ -133,15 +165,9 @@ export function App() {
         onClose={() => setRulesOpen(false)}
       />
 
-      <GroupModal
-        isOpen={groupOpen}
-        onClose={() => setGroupOpen(false)}
-      />
+      <GroupModal isOpen={groupOpen} onClose={() => setGroupOpen(false)} />
 
-      <ConfirmModal
-        dialog={confirmDialog}
-        onClose={() => setConfirmDialog(null)}
-      />
+      <ConfirmModal dialog={confirmDialog} onClose={() => setConfirmDialog(null)} />
     </div>
   );
 }

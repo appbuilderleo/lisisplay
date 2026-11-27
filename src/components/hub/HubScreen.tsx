@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import {
   ArrowRight,
   BookOpen,
+  Box,
   ChevronRight,
   Flame,
   HandMetal,
@@ -30,7 +31,7 @@ interface HubScreenProps {
   onOpenGroup: () => void;
 }
 
-type CategoryFilter = 'all' | 'mimica' | 'blefe' | 'votacao' | 'rapidos';
+type CategoryFilter = 'all' | 'mimica' | 'blefe' | 'votacao' | 'puzzle' | 'rapidos';
 type BottomTab = 'jogos' | 'favoritos';
 type ViewMode = 'grid' | 'list';
 
@@ -107,6 +108,24 @@ const CATALOG: GameCatalogItem[] = [
     accentText: 'text-[#00FFA3]',
     icon: HandMetal,
   },
+  {
+    id: 'cubo',
+    name: 'Cubo Mágico',
+    subtitle: '3D Interativo · Solo & Duelo',
+    description:
+      'Cubo 2×2 e 3×3 em 3D a 60fps! Treina o teu recorde pessoal ou desafia amigos em duelo sincronizado por QR Code.',
+    cover: '/game-cubo.svg',
+    topBadge: 'Novo · 3D WebGL',
+    topBadgeTone: 'orange',
+    bottomTag: '2×2 & 3×3 · QR',
+    difficulty: 'Desafio',
+    players: '1+ jog.',
+    duration: 'Recorde',
+    footerMeta: 'Solo PB/Ao5 & Duelo',
+    categories: ['puzzle', 'rapidos'],
+    accentText: 'text-[#19D8F2]',
+    icon: Box,
+  },
 ];
 
 const CATEGORY_CHIPS: { id: CategoryFilter; label: string }[] = [
@@ -114,6 +133,7 @@ const CATEGORY_CHIPS: { id: CategoryFilter; label: string }[] = [
   { id: 'mimica', label: 'Mímica' },
   { id: 'blefe', label: 'Blefe' },
   { id: 'votacao', label: 'Votação' },
+  { id: 'puzzle', label: '3D / Puzzle' },
   { id: 'rapidos', label: 'Rápidos' },
 ];
 

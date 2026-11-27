@@ -57,4 +57,16 @@ export const RULES_CONTENT: Record<RulesTab, RuleSection> = {
     ],
     tip: 'Regra de ouro do Zoe: ninguém pode apontar depois de ver para onde os outros apontaram!',
   },
+  cubo: {
+    id: 'cubo',
+    title: 'Cubo Mágico · 3D Digital',
+    tagline: 'Cubo interativo 2×2 e 3×3 em 3D para treinar recordes ou duelar por QR Code.',
+    steps: [
+      'Escolhe entre cubo 2×2 ou 3×3 e toca em "Embaralhar". O cronómetro arranca automaticamente no primeiro movimento!',
+      'Desliza o dedo sobre qualquer peça colorida para girar apenas essa camada na direção do gesto.',
+      'Arrasta fora do cubo para rodar a câmara livremente em 360° e observar todas as faces.',
+      'No Modo Duelo, o anfitrião cria uma sala de 4 letras + QR Code com a mesma Seed de embaralhamento para todos resolverem exatamente o mesmo cubo ao mesmo tempo!',
+    ],
+    tip: 'Sem internet? Partilha o Código de Seed no Modo Duelo para todos gerarem exatamente o mesmo embaralhamento offline.',
+  },
 };

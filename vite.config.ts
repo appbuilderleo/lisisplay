@@ -16,6 +16,7 @@ export default defineConfig({
         'game-kiyumi.jpg',
         'game-impostor.jpg',
         'game-zoe.jpg',
+        'game-cubo.svg',
         'pwa-192.png',
         'pwa-512.png',
       ],

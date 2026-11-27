@@ -1,8 +1,28 @@
-export type GameId = 'kiyumi' | 'impostor' | 'zoe';
+export type GameId = 'kiyumi' | 'impostor' | 'zoe' | 'cubo';
 
 export type AppView = 'splash' | 'hub' | GameId;
 
 export type RulesTab = 'geral' | GameId;
+
+export type CubeSize = 2 | 3;
+
+export interface CubeSolveRecord {
+  id: string;
+  size: CubeSize;
+  timeMs: number;
+  moves: number;
+  seed: string;
+  createdAt: number;
+}
+
+export interface CubeRoomPlayer {
+  id: string;
+  name: string;
+  isHost: boolean;
+  status: 'ready' | 'solving' | 'solved';
+  timeMs?: number;
+  moves?: number;
+}
 
 export interface WordDeck {
   id: string;

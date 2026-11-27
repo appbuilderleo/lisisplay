@@ -14,6 +14,10 @@ Plataforma web progressiva (**PWA**) *mobile-first* de jogos sociais presenciais
    - Distribuição anti-espreitadela, sorteio da primeira pista, cronómetro de debate (2:00 + pausar +30s), votação e **Última Cartada** (4 palavras do mesmo baralho).
 3. **Zoe ("Quem na Roda?")**
    - Baralhos temáticos (*Amigos & Festas*, *No Trabalho / Escola*, *Situações Improváveis* e *Todos os Temas*) com contagem animada **3 · 2 · 1 · APONTEM!**.
+4. **Cubo Mágico Digital (3D Interativo — 2×2 & 3×3)**
+   - Motor 3D **Three.js (WebGL)** a 60fps: desliza numa peça para girar a camada ou arrasta fora para rodar a câmara 360°.
+   - **Modo Solo**: cronómetro automático no 1.º toque (`00:00.0`), recorde pessoal (**PB**), média **Ao5** e histórico offline em `localStorage`.
+   - **Modo Duelo (Sala)**: código de 4 letras + **QR Code**, seed determinística idêntica para todos, contagem sincronizada **3-2-1**, pódio ao vivo P2P (WebRTC) e fallback 100% offline por Código de Scramble.
 
 ## Stack Tecnológica
 

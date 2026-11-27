@@ -112,9 +112,10 @@ export function SplashScreen({ onEnter }: SplashScreenProps) {
           {/* Concise Description */}
           <p className="mb-6 max-w-[330px] text-sm leading-relaxed text-[#B9CAC4]">
             <strong className="font-semibold text-[#F8FAFC]">Kiyumi</strong>,{' '}
-            <strong className="font-semibold text-[#F8FAFC]">O Impostor</strong> e{' '}
-            <strong className="font-semibold text-[#F8FAFC]">Zoe</strong> — jogos sociais
-            presenciais feitos para juntar a roda com apenas um celular.
+            <strong className="font-semibold text-[#F8FAFC]">O Impostor</strong>,{' '}
+            <strong className="font-semibold text-[#F8FAFC]">Zoe</strong> e{' '}
+            <strong className="font-semibold text-[#F8FAFC]">Cubo Mágico 3D</strong> — jogos
+            sociais presenciais feitos para juntar a roda.
           </p>
 
           {/* 3 Glassmorphic Bento Highlight Cards */}

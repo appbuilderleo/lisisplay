@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 472" fill="none">
+  <defs>
+    <radialGradient id="bgGlow1" cx="50%" cy="46%" r="52%">
+      <stop offset="0%" stop-color="#00F5D4" stop-opacity="0.28"/>
+      <stop offset="55%" stop-color="#0F172A" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#070B14" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bgGlow2" cx="24%" cy="72%" r="38%">
+      <stop offset="0%" stop-color="#FF6B35" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#070B14" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bgGlow3" cx="78%" cy="28%" r="34%">
+      <stop offset="0%" stop-color="#19D8F2" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#070B14" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="floorGlow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FF6B35" stop-opacity="0"/>
+      <stop offset="35%" stop-color="#00F5D4" stop-opacity="0.4"/>
+      <stop offset="65%" stop-color="#19D8F2" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#FF6B35" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="neonBlur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="16" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Deep Obsidian Canvas -->
+  <rect width="840" height="472" fill="#070B14"/>
+  <rect width="840" height="472" fill="url(#bgGlow1)"/>
+  <rect width="840" height="472" fill="url(#bgGlow2)"/>
+  <rect width="840" height="472" fill="url(#bgGlow3)"/>
+
+  <!-- Subtle futuristic perspective grid lines -->
+  <g stroke="#19D8F2" stroke-opacity="0.07" stroke-width="1">
+    <line x1="0" y1="360" x2="840" y2="360"/>
+    <line x1="0" y1="400" x2="840" y2="400"/>
+    <line x1="0" y1="445" x2="840" y2="445"/>
+    <line x1="120" y1="472" x2="320" y2="320"/>
+    <line x1="280" y1="472" x2="390" y2="320"/>
+    <line x1="560" y1="472" x2="450" y2="320"/>
+    <line x1="720" y1="472" x2="520" y2="320"/>
+  </g>
+
+  <!-- Ground Halo Shadow -->
+  <ellipse cx="420" cy="406" rx="175" ry="26" fill="url(#floorGlow)" opacity="0.55"/>
+
+  <!-- Isometric 3x3 Rubik's Cube -->
+  <g transform="translate(420 226)">
+    <!-- Outer Dark Silhouette Body -->
+    <polygon points="0,-168 148,-84 148,84 0,168 -148,84 -148,-84" fill="#0A0F1D" stroke="#00F5D4" stroke-opacity="0.35" stroke-width="2.5" stroke-linejoin="round"/>
+
+    <!-- TOP FACE (9 stickers, diamond grid) -->
+    <!-- Row 0 -->
+    <polygon points="0,-158 44,-133 0,-108 -44,-133" fill="#F8FAFC" rx="4"/>
+    <polygon points="49,-130 93,-105 49,-80 5,-105" fill="#00F5D4"/>
+    <polygon points="98,-102 142,-77 98,-52 54,-77" fill="#FACC15"/>
+    <!-- Row 1 -->
+    <polygon points="-49,-130 -5,-105 -49,-80 -93,-105" fill="#FF6B35"/>
+    <polygon points="0,-102 44,-77 0,-52 -44,-77" fill="#F8FAFC"/>
+    <polygon points="49,-74 93,-49 49,-24 5,-49" fill="#FF3366"/>
+    <!-- Row 2 -->
+    <polygon points="-98,-102 -54,-77 -98,-52 -142,-77" fill="#F8FAFC"/>
+    <polygon points="-49,-74 -5,-49 -49,-24 -93,-49" fill="#19D8F2"/>
+    <polygon points="0,-46 44,-21 0,4 -44,-21" fill="#00FFA3"/>
+
+    <!-- LEFT FACE (9 stickers) -->
+    <!-- Col 0 (leftmost) -->
+    <polygon points="-142,-70 -98,-45 -98,4 -142,-21" fill="#FF3366"/>
+    <polygon points="-142,-14 -98,11 -98,60 -142,35" fill="#FF6B35"/>
+    <polygon points="-142,42 -98,67 -98,116 -142,91" fill="#00F5D4"/>
+    <!-- Col 1 -->
+    <polygon points="-93,-42 -49,-17 -49,32 -93,7" fill="#FACC15"/>
+    <polygon points="-93,14 -49,39 -49,88 -93,63" fill="#FF6B35"/>
+    <polygon points="-93,70 -49,95 -49,144 -93,119" fill="#F8FAFC"/>
+    <!-- Col 2 (center-left) -->
+    <polygon points="-44,-14 -3,10 -3,59 -44,35" fill="#FF6B35"/>
+    <polygon points="-44,42 -3,66 -3,115 -44,91" fill="#2563EB"/>
+    <polygon points="-44,98 -3,122 -3,163 -44,139" fill="#FF3366"/>
+
+    <!-- RIGHT FACE (9 stickers) -->
+    <!-- Col 0 (center-right) -->
+    <polygon points="3,10 44,-14 44,35 3,59" fill="#00F5D4"/>
+    <polygon points="3,66 44,42 44,91 3,115" fill="#00FFA3"/>
+    <polygon points="3,122 44,98 44,139 3,163" fill="#FACC15"/>
+    <!-- Col 1 -->
+    <polygon points="49,-17 93,-42 93,7 49,32" fill="#2563EB"/>
+    <polygon points="49,39 93,14 93,63 49,88" fill="#00F5D4"/>
+    <polygon points="49,95 93,70 93,119 49,144" fill="#FF6B35"/>
+    <!-- Col 2 (rightmost) -->
+    <polygon points="98,-45 142,-70 142,-21 98,4" fill="#FF6B35"/>
+    <polygon points="98,11 142,-14 142,35 98,60" fill="#F8FAFC"/>
+    <polygon points="98,67 142,42 142,91 98,116" fill="#19D8F2"/>
+
+    <!-- Glossy Rim Highlight -->
+    <polyline points="-148,-84 0,-168 148,-84" fill="none" stroke="#F8FAFC" stroke-opacity="0.45" stroke-width="2"/>
+  </g>
+
+  <!-- Kinetic Rotation Arcs -->
+  <path d="M 218 158 C 190 218 205 288 260 330" stroke="#00F5D4" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="10 10" opacity="0.7" filter="url(#neonBlur)"/>
+  <path d="M 622 308 C 652 248 636 178 580 134" stroke="#FF6B35" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="10 10" opacity="0.75" filter="url(#neonBlur)"/>
+
+  <!-- Floating Sparkle Dots -->
+  <circle cx="204" cy="126" r="4" fill="#00F5D4" opacity="0.85"/>
+  <circle cx="642" cy="340" r="5" fill="#FF6B35" opacity="0.8"/>
+  <circle cx="670" cy="136" r="3.5" fill="#00FFA3" opacity="0.75"/>
+  <circle cx="176" cy="316" r="3" fill="#19D8F2" opacity="0.7"/>
+</svg>

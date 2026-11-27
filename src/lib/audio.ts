@@ -152,6 +152,19 @@ class SoundEngine {
     this.playTone(1046.5, 0.35, { type: 'sine', volume: 0.2, delay: 0.3 });
     this.vibrate([50, 35, 50, 35, 110]);
   }
+
+  /** Clique mecânico tátil do Cubo Mágico ao girar uma camada */
+  public cubeTurn() {
+    this.playTone(320, 0.04, { type: 'triangle', volume: 0.1, endFreq: 190 });
+    this.playTone(640, 0.028, { type: 'sine', volume: 0.06, delay: 0.015, endFreq: 480 });
+    this.vibrate(14);
+  }
+
+  /** Som suave ao desfazer movimento do Cubo Mágico */
+  public cubeUndo() {
+    this.playTone(460, 0.055, { type: 'sine', volume: 0.08, endFreq: 310 });
+    this.vibrate(12);
+  }
 }
 
 export const sound = new SoundEngine();

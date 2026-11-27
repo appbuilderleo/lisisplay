@@ -16,6 +16,7 @@ const TABS: { id: RulesTab; label: string }[] = [
   { id: 'kiyumi', label: 'Kiyumi' },
   { id: 'impostor', label: 'Impostor' },
   { id: 'zoe', label: 'Zoe' },
+  { id: 'cubo', label: 'Cubo' },
 ];
 
 export function RulesModal({ isOpen, initialTab, onClose }: RulesModalProps) {
@@ -46,7 +47,7 @@ export function RulesModal({ isOpen, initialTab, onClose }: RulesModalProps) {
       }
     >
       {/* Tabs */}
-      <div className="mb-4 grid grid-cols-4 gap-1.5 rounded-full bg-[#070B14] p-1.5">
+      <div className="mb-4 grid grid-cols-5 gap-1 rounded-full bg-[#070B14] p-1">
         {TABS.map((tab) => {
           const selected = activeTab === tab.id;
           return (
