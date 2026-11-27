@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Compass,
   History,
+  Pause,
+  Play,
   RotateCcw,
   Shuffle,
   Sparkles,
@@ -32,7 +34,7 @@ import { CubeCanvas, CubeCanvasHandle } from './CubeCanvas';
 import { CubeMultiplayerPanel } from './CubeMultiplayerPanel';
 
 type CubeMode = 'solo' | 'multiplayer';
-type SolvePhase = 'idle' | 'armed' | 'running' | 'solved';
+type SolvePhase = 'idle' | 'armed' | 'running' | 'paused' | 'solved';
 
 interface CuboMagicoGameProps {
   initialRoomParams?: {
@@ -72,6 +74,7 @@ export function CuboMagicoGame({ initialRoomParams }: CuboMagicoGameProps) {
 
   const cubeRef = useRef<CubeCanvasHandle | null>(null);
   const startTimeRef = useRef<number>(0);
+  const accumulatedMsRef = useRef<number>(0);
   const rafTimerRef = useRef<number>(0);
   const movesRef = useRef<number>(0);
   const solvePhaseRef = useRef<SolvePhase>(solvePhase);
@@ -99,27 +102,25 @@ export function CuboMagicoGame({ initialRoomParams }: CuboMagicoGameProps) {
     [history, size],
   );
 
-  // Persist player name
   const handlePlayerNameChange = (next: string) => {
     setPlayerName(next);
     saveCubePlayerName(next);
   };
 
-  // High-precision stopwatch loop (00:00.0)
+  // High-precision stopwatch loop (00:00.0) with pause/resume support
   useEffect(() => {
     if (solvePhase !== 'running') {
       window.cancelAnimationFrame(rafTimerRef.current);
       return;
     }
     const tick = () => {
-      setElapsedMs(performance.now() - startTimeRef.current);
+      setElapsedMs(accumulatedMsRef.current + (performance.now() - startTimeRef.current));
       rafTimerRef.current = window.requestAnimationFrame(tick);
     };
     rafTimerRef.current = window.requestAnimationFrame(tick);
     return () => window.cancelAnimationFrame(rafTimerRef.current);
   }, [solvePhase]);
 
-  // Cleanup multiplayer peer on unmount
   useEffect(() => {
     return () => {
       roomCtrlRef.current?.destroy();
@@ -149,6 +150,7 @@ export function CuboMagicoGame({ initialRoomParams }: CuboMagicoGameProps) {
         setInDuelRace(true);
         setShowPodiumModal(false);
         setSolvePhase('idle');
+        accumulatedMsRef.current = 0;
         setElapsedMs(0);
         setMovesCount(0);
         setIsNewPB(false);
@@ -176,31 +178,66 @@ export function CuboMagicoGame({ initialRoomParams }: CuboMagicoGameProps) {
     ctrl.joinRoom(code, targetSize, targetSeed);
   }, [initialRoomParams, ensureRoomController]);
 
-  // Actions: Scramble, Reset, Undo, Center
+  // Embaralhar no Solo (prepara o cubo e arma o cronómetro para o 1.º toque ou clique em Iniciar)
   const handleScrambleSolo = useCallback(
-    (overrideSize?: CubeSize, overrideSeed?: string) => {
+    (autoStart = false, overrideSize?: CubeSize, overrideSeed?: string) => {
       sound.unlock();
       sound.go();
       const targetSize = overrideSize ?? sizeRef.current;
       const seed = overrideSeed ?? generateScrambleSeed();
       setCurrentSeed(seed);
+      accumulatedMsRef.current = 0;
       setElapsedMs(0);
       setMovesCount(0);
       setIsNewPB(false);
-      setSolvePhase('armed');
 
       const moves = generateScrambleMoves(targetSize, seed);
-      // Pequeno micro-delay caso o tamanho do cubo tenha acabado de mudar
       window.requestAnimationFrame(() => {
         cubeRef.current?.applyScramble(moves);
+        if (autoStart) {
+          startTimeRef.current = performance.now();
+          setSolvePhase('running');
+        } else {
+          setSolvePhase('armed');
+        }
       });
     },
     [],
   );
 
+  // Botão explícito "Iniciar / Pausar / Retomar" no Modo Solo
+  const handleSoloPrimaryAction = () => {
+    sound.unlock();
+    if (solvePhase === 'idle' || solvePhase === 'solved') {
+      // Embaralha e inicia o cronómetro imediatamente!
+      handleScrambleSolo(true);
+      return;
+    }
+    if (solvePhase === 'armed') {
+      sound.go();
+      accumulatedMsRef.current = 0;
+      startTimeRef.current = performance.now();
+      setSolvePhase('running');
+      return;
+    }
+    if (solvePhase === 'running') {
+      sound.tap();
+      accumulatedMsRef.current += performance.now() - startTimeRef.current;
+      setElapsedMs(accumulatedMsRef.current);
+      setSolvePhase('paused');
+      return;
+    }
+    if (solvePhase === 'paused') {
+      sound.tap();
+      startTimeRef.current = performance.now();
+      setSolvePhase('running');
+    }
+  };
+
   const handleResetCube = () => {
     sound.tap();
     cubeRef.current?.resetSolved();
+    accumulatedMsRef.current = 0;
     setSolvePhase('idle');
     setElapsedMs(0);
     setMovesCount(0);
@@ -220,6 +257,7 @@ export function CuboMagicoGame({ initialRoomParams }: CuboMagicoGameProps) {
     if (nextSize === size) return;
     sound.tap();
     setSize(nextSize);
+    accumulatedMsRef.current = 0;
     setSolvePhase('idle');
     setElapsedMs(0);
     setMovesCount(0);
@@ -233,20 +271,28 @@ export function CuboMagicoGame({ initialRoomParams }: CuboMagicoGameProps) {
 
   // Triggered on every user layer turn
   const handleUserMove = useCallback((totalMoves: number) => {
+    if (solvePhaseRef.current === 'idle') {
+      return;
+    }
     setMovesCount(totalMoves);
     if (solvePhaseRef.current === 'armed') {
+      accumulatedMsRef.current = 0;
       startTimeRef.current = performance.now();
       setSolvePhase('running');
     }
   }, []);
 
-  // Triggered automatically when all 6 faces are solved!
+  // Triggered automatically when all 6 faces are solved
   const handleCubeSolved = useCallback(() => {
     const finalMs =
       solvePhaseRef.current === 'running'
-        ? Math.max(100, Math.round(performance.now() - startTimeRef.current))
-        : Math.max(100, Math.round(elapsedMs));
+        ? Math.max(
+            100,
+            Math.round(accumulatedMsRef.current + (performance.now() - startTimeRef.current)),
+          )
+        : Math.max(100, Math.round(accumulatedMsRef.current || elapsedMs));
 
+    accumulatedMsRef.current = finalMs;
     setElapsedMs(finalMs);
     setSolvePhase('solved');
     sound.victory();
@@ -304,6 +350,7 @@ export function CuboMagicoGame({ initialRoomParams }: CuboMagicoGameProps) {
     setRoomPlayers([]);
     setInDuelRace(false);
     setConnectionState('idle');
+    accumulatedMsRef.current = 0;
     setSolvePhase('idle');
     setElapsedMs(0);
     setMovesCount(0);
@@ -324,6 +371,7 @@ export function CuboMagicoGame({ initialRoomParams }: CuboMagicoGameProps) {
     if (!duelCountdown) return;
     const moves = generateScrambleMoves(duelCountdown.size, duelCountdown.seed);
     setDuelCountdown(null);
+    accumulatedMsRef.current = 0;
     setMovesCount(0);
     setElapsedMs(0);
     setIsNewPB(false);
@@ -336,7 +384,6 @@ export function CuboMagicoGame({ initialRoomParams }: CuboMagicoGameProps) {
 
   const showCubeStage = mode === 'solo' || inDuelRace;
 
-  // Ordenar pódio para badge ao vivo durante duelo
   const sortedPodium = useMemo(() => {
     return [...roomPlayers].sort((a, b) => {
       if (a.status === 'solved' && b.status !== 'solved') return -1;
@@ -347,6 +394,15 @@ export function CuboMagicoGame({ initialRoomParams }: CuboMagicoGameProps) {
       return 0;
     });
   }, [roomPlayers]);
+
+  const soloPrimaryLabel =
+    solvePhase === 'running'
+      ? 'Pausar'
+      : solvePhase === 'paused'
+        ? 'Retomar'
+        : solvePhase === 'solved'
+          ? 'Novo Jogo'
+          : 'Iniciar';
 
   return (
     <div className="mx-auto flex min-h-[calc(100dvh-68px)] w-full max-w-lg flex-col px-3.5 pb-safe pt-2.5">
@@ -415,7 +471,7 @@ export function CuboMagicoGame({ initialRoomParams }: CuboMagicoGameProps) {
         </div>
       </div>
 
-      {/* MULTIPLAYER LOBBY VIEW (when in Duelo mode and not actively racing) */}
+      {/* MULTIPLAYER LOBBY VIEW */}
       {!showCubeStage ? (
         <div className="flex-1 py-1">
           <CubeMultiplayerPanel
@@ -436,17 +492,17 @@ export function CuboMagicoGame({ initialRoomParams }: CuboMagicoGameProps) {
           />
         </div>
       ) : (
-        /* ACTIVE 3D CUBE STAGE (Solo OR Live Multiplayer Race) */
+        /* ACTIVE 3D CUBE STAGE */
         <>
-          {/* Compact Telemetry Card: Stopwatch + PB/Ao5 or Live Podium button */}
+          {/* Compact Telemetry Card */}
           <div className="glass-card mb-2 flex items-center justify-between gap-2 rounded-2xl px-4 py-2.5">
-            <div>
-              <div className="flex items-center gap-2">
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
                 <span
-                  className={`font-display text-3xl font-extrabold tabular-nums leading-none tracking-tight ${
+                  className={`font-display text-2xl font-extrabold tabular-nums leading-none tracking-tight sm:text-3xl ${
                     solvePhase === 'solved'
                       ? 'text-[#00F5D4]'
-                      : solvePhase === 'armed'
+                      : solvePhase === 'armed' || solvePhase === 'paused'
                         ? 'text-[#FF6B35]'
                         : 'text-[#19D8F2]'
                   }`}
@@ -458,8 +514,13 @@ export function CuboMagicoGame({ initialRoomParams }: CuboMagicoGameProps) {
                     1.º toque inicia
                   </span>
                 )}
+                {solvePhase === 'paused' && (
+                  <span className="rounded-full bg-[#FF6B35]/15 px-2 py-0.5 text-[10px] font-bold uppercase text-[#FF6B35]">
+                    Em pausa
+                  </span>
+                )}
               </div>
-              <div className="mt-1 flex items-center gap-2.5 text-[11px] font-semibold text-[#94A3B8]">
+              <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] font-semibold text-[#94A3B8]">
                 <span>Movs: {movesCount}</span>
                 <span>•</span>
                 {mode === 'solo' ? (
@@ -498,7 +559,7 @@ export function CuboMagicoGame({ initialRoomParams }: CuboMagicoGameProps) {
                   setShowHistoryModal(true);
                 }}
                 aria-label="Ver histórico de tempos"
-                className="flex h-11 items-center gap-1.5 rounded-full bg-[#1B2029] px-3 text-xs font-bold text-[#19D8F2] transition active:scale-95"
+                className="flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-[#1B2029] px-3 text-xs font-bold text-[#19D8F2] transition active:scale-95"
               >
                 <History className="h-4 w-4" />
                 <span>{stats.count}</span>
@@ -510,7 +571,7 @@ export function CuboMagicoGame({ initialRoomParams }: CuboMagicoGameProps) {
                   sound.tap();
                   setShowPodiumModal(true);
                 }}
-                className="flex h-11 items-center gap-1.5 rounded-full bg-[#00F5D4]/15 px-3 text-xs font-bold text-[#00F5D4] transition active:scale-95"
+                className="flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-[#00F5D4]/15 px-3 text-xs font-bold text-[#00F5D4] transition active:scale-95"
               >
                 <Trophy className="h-4 w-4" />
                 <span>Pódio</span>
@@ -518,38 +579,56 @@ export function CuboMagicoGame({ initialRoomParams }: CuboMagicoGameProps) {
             )}
           </div>
 
-          {/* GIANT INTERACTIVE 3D CUBE CARD (Occupies most of the screen!) */}
-          <div className="relative flex min-h-[340px] flex-1 flex-col overflow-hidden rounded-[2rem] border-2 border-[#00F5D4]/30 bg-[#070B14] shadow-2xl">
-            {/* Ambient radial spotlight behind the 3D cube */}
+          {/* GIANT DEAD-CENTERED 3D CUBE STAGE */}
+          <div className="relative min-h-[340px] w-full flex-1 overflow-hidden rounded-[2rem] border-2 border-[#00F5D4]/30 bg-[#070B14] shadow-2xl">
+            {/* Ambient radial spotlight */}
             <div
               className="pointer-events-none absolute inset-0"
               style={{
                 background:
-                  'radial-gradient(circle at 50% 48%, rgba(0,245,212,0.12) 0%, rgba(15,23,42,0.55) 48%, rgba(7,11,20,0.96) 100%)',
+                  'radial-gradient(circle at 50% 50%, rgba(0,245,212,0.12) 0%, rgba(15,23,42,0.52) 48%, rgba(7,11,20,0.96) 100%)',
               }}
             />
 
-            {/* WebGL 60fps 3D Cube */}
-            <div className="relative z-10 h-full min-h-[330px] w-full flex-1">
-              <CubeCanvas
-                ref={cubeRef}
-                size={size}
-                locked={solvePhase === 'solved'}
-                onUserMove={handleUserMove}
-                onSolved={handleCubeSolved}
-              />
-            </div>
+            {/* Full-bleed Centered WebGL Canvas */}
+            <CubeCanvas
+              ref={cubeRef}
+              size={size}
+              locked={solvePhase === 'solved' || solvePhase === 'paused'}
+              onUserMove={handleUserMove}
+              onSolved={handleCubeSolved}
+            />
 
-            {/* Subtle inside-card touch hint when idle or armed */}
-            {solvePhase !== 'running' && solvePhase !== 'solved' && (
+            {/* Subtle inside-card touch hint */}
+            {(solvePhase === 'idle' || solvePhase === 'armed') && (
               <div className="pointer-events-none absolute bottom-3 left-3 right-3 z-20 flex justify-center">
                 <span className="glass-card rounded-full px-3.5 py-1.5 text-center text-[11px] font-medium text-[#B9CAC4]">
-                  Desliza numa peça para girar · Arrasta fora para rodar 360°
+                  {solvePhase === 'idle'
+                    ? 'Toca em Iniciar ou Embaralhar · Arrasta fora para rodar 360°'
+                    : 'Desliza numa peça para girar · 1.º movimento inicia o tempo'}
                 </span>
               </div>
             )}
 
-            {/* Solved Celebration Overlay Inside the Card */}
+            {/* Paused Overlay inside card */}
+            {solvePhase === 'paused' && (
+              <div className="animate-pop-in absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#070B14]/82 p-6 text-center backdrop-blur-md">
+                <p className="font-display text-3xl font-extrabold text-[#FF6B35]">EM PAUSA</p>
+                <p className="mt-1.5 text-xs text-[#B9CAC4]">
+                  Tempo atual: <strong className="text-[#19D8F2]">{formatCubeTime(elapsedMs)}</strong>
+                </p>
+                <button
+                  type="button"
+                  onClick={handleSoloPrimaryAction}
+                  className="mt-5 inline-flex min-h-[50px] items-center gap-2 rounded-full bg-[#00F5D4] px-7 font-display text-sm font-extrabold text-[#070B14] shadow-[0_8px_24px_-4px_rgba(0,245,212,0.4)] transition active:scale-95"
+                >
+                  <Play className="h-4 w-4 fill-current" />
+                  Retomar Jogo
+                </button>
+              </div>
+            )}
+
+            {/* Solved Celebration Overlay inside card */}
             {solvePhase === 'solved' && (
               <div className="animate-pop-in absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#070B14]/84 p-6 text-center backdrop-blur-md">
                 <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-[#00F5D4]/20 text-[#00F5D4]">
@@ -561,7 +640,7 @@ export function CuboMagicoGame({ initialRoomParams }: CuboMagicoGameProps) {
                   {isNewPB ? 'Novo Recorde Pessoal!' : 'Cubo Resolvido!'}
                 </span>
 
-                <p className="font-display mt-3 text-5xl font-extrabold tabular-nums text-[#00F5D4]">
+                <p className="font-display mt-3 text-4xl font-extrabold tabular-nums text-[#00F5D4] sm:text-5xl">
                   {formatCubeTime(elapsedMs)}
                 </p>
 
@@ -573,11 +652,11 @@ export function CuboMagicoGame({ initialRoomParams }: CuboMagicoGameProps) {
                   {mode === 'solo' ? (
                     <button
                       type="button"
-                      onClick={() => handleScrambleSolo()}
+                      onClick={() => handleScrambleSolo(true)}
                       className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full bg-[#00F5D4] px-6 font-display text-sm font-extrabold text-[#070B14] shadow-[0_8px_24px_-4px_rgba(0,245,212,0.4)] transition active:scale-95"
                     >
-                      <Shuffle className="h-4 w-4" />
-                      Embaralhar e Tentar de Novo
+                      <Play className="h-4 w-4 fill-current" />
+                      Jogar Novamente
                     </button>
                   ) : (
                     <>
@@ -610,50 +689,64 @@ export function CuboMagicoGame({ initialRoomParams }: CuboMagicoGameProps) {
             )}
           </div>
 
-          {/* Bottom 35% Thumb-Zone Support Buttons */}
-          <div className="flex items-center gap-2 py-2.5">
-            <button
-              type="button"
-              disabled={movesCount === 0 || solvePhase === 'solved'}
-              onClick={handleUndo}
-              aria-label="Desfazer movimento"
-              title="Desfazer"
-              className="glass-card flex h-[56px] w-[56px] shrink-0 items-center justify-center rounded-full text-[#F8FAFC] transition active:scale-95 disabled:opacity-35"
-            >
-              <Undo2 className="h-5 w-5" />
-            </button>
+          {/* Bottom Thumb-Zone Controls (Zero Horizontal Overflow on 320px+ Mobile) */}
+          <div className="space-y-2 py-2.5">
+            {/* Compact Utility Row: Desfazer | Centrar | Reiniciar */}
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                type="button"
+                disabled={movesCount === 0 || solvePhase === 'solved' || solvePhase === 'paused'}
+                onClick={handleUndo}
+                className="glass-card flex min-h-[44px] items-center justify-center gap-1.5 rounded-full px-2 text-xs font-bold text-[#F8FAFC] transition active:scale-95 disabled:opacity-35"
+              >
+                <Undo2 className="h-4 w-4 shrink-0" />
+                <span className="truncate">Desfazer</span>
+              </button>
 
-            <button
-              type="button"
-              onClick={handleCenter}
-              aria-label="Centrar cubo"
-              title="Centrar cubo"
-              className="glass-card flex h-[56px] w-[56px] shrink-0 items-center justify-center rounded-full text-[#19D8F2] transition active:scale-95"
-            >
-              <Compass className="h-5 w-5" />
-            </button>
+              <button
+                type="button"
+                onClick={handleCenter}
+                className="glass-card flex min-h-[44px] items-center justify-center gap-1.5 rounded-full px-2 text-xs font-bold text-[#19D8F2] transition active:scale-95"
+              >
+                <Compass className="h-4 w-4 shrink-0" />
+                <span className="truncate">Centrar</span>
+              </button>
 
+              <button
+                type="button"
+                onClick={handleResetCube}
+                className="glass-card flex min-h-[44px] items-center justify-center gap-1.5 rounded-full px-2 text-xs font-bold text-[#B9CAC4] transition active:scale-95 hover:text-[#FF3366]"
+              >
+                <RotateCcw className="h-4 w-4 shrink-0" />
+                <span className="truncate">Reiniciar</span>
+              </button>
+            </div>
+
+            {/* Primary Action Row */}
             {mode === 'solo' ? (
-              <>
+              <div className="grid grid-cols-2 gap-2.5">
                 <button
                   type="button"
-                  onClick={handleResetCube}
-                  aria-label="Reiniciar cubo"
-                  title="Reiniciar"
-                  className="glass-card flex h-[56px] w-[56px] shrink-0 items-center justify-center rounded-full text-[#B9CAC4] transition active:scale-95 hover:text-[#FF3366]"
+                  onClick={() => handleScrambleSolo(false)}
+                  className="flex min-h-[54px] min-w-0 items-center justify-center gap-1.5 rounded-full border-2 border-[#FF6B35] bg-[#0F172A] px-3 font-display text-sm font-extrabold text-[#FF6B35] transition active:scale-[0.98] active:bg-[#FF6B35] active:text-[#070B14]"
                 >
-                  <RotateCcw className="h-5 w-5" />
+                  <Shuffle className="h-4 w-4 shrink-0" />
+                  <span className="truncate">Embaralhar</span>
                 </button>
 
                 <button
                   type="button"
-                  onClick={() => handleScrambleSolo()}
-                  className="flex min-h-[56px] flex-1 items-center justify-center gap-2 rounded-full bg-[#FF6B35] px-5 font-display text-base font-extrabold text-[#070B14] shadow-[0_8px_28px_-4px_rgba(255,107,53,0.45)] transition active:scale-[0.98]"
+                  onClick={handleSoloPrimaryAction}
+                  className="flex min-h-[54px] min-w-0 items-center justify-center gap-1.5 rounded-full bg-[#00F5D4] px-3 font-display text-sm font-extrabold text-[#070B14] shadow-[0_8px_24px_-4px_rgba(0,245,212,0.42)] transition active:scale-[0.98]"
                 >
-                  <Shuffle className="h-5 w-5" />
-                  Embaralhar
+                  {solvePhase === 'running' ? (
+                    <Pause className="h-4 w-4 shrink-0" />
+                  ) : (
+                    <Play className="h-4 w-4 shrink-0 fill-current" />
+                  )}
+                  <span className="truncate">{soloPrimaryLabel}</span>
                 </button>
-              </>
+              </div>
             ) : (
               <button
                 type="button"
@@ -662,7 +755,7 @@ export function CuboMagicoGame({ initialRoomParams }: CuboMagicoGameProps) {
                   setInDuelRace(false);
                   setSolvePhase('idle');
                 }}
-                className="glass-card flex min-h-[56px] flex-1 items-center justify-center gap-2 rounded-full border-[#00F5D4]/35 px-4 font-display text-sm font-extrabold text-[#00F5D4] transition active:scale-[0.98]"
+                className="glass-card flex min-h-[54px] w-full items-center justify-center gap-2 rounded-full border-[#00F5D4]/35 px-4 font-display text-sm font-extrabold text-[#00F5D4] transition active:scale-[0.98]"
               >
                 <Users className="h-4 w-4" />
                 Sala {roomCode} · Pódio
@@ -672,7 +765,7 @@ export function CuboMagicoGame({ initialRoomParams }: CuboMagicoGameProps) {
         </>
       )}
 
-      {/* Modal: Histórico Solo (PB, Ao5 e últimos tempos) */}
+      {/* Modal: Histórico Solo */}
       <Modal
         isOpen={showHistoryModal}
         onClose={() => setShowHistoryModal(false)}
@@ -715,7 +808,7 @@ export function CuboMagicoGame({ initialRoomParams }: CuboMagicoGameProps) {
           {sizeHistory.length === 0 ? (
             <p className="rounded-2xl bg-[#1B2029] p-5 text-center text-xs text-[#94A3B8]">
               Ainda não tens tempos registados no cubo {size}×{size}. Carrega em{' '}
-              <strong className="text-[#FF6B35]">Embaralhar</strong> e começa a treinar!
+              <strong className="text-[#00F5D4]">Iniciar</strong> e começa a treinar!
             </p>
           ) : (
             <ul className="space-y-2">
@@ -742,7 +835,7 @@ export function CuboMagicoGame({ initialRoomParams }: CuboMagicoGameProps) {
         </div>
       </Modal>
 
-      {/* Modal: Pódio Ao Vivo (durante corrida multijogador) */}
+      {/* Modal: Pódio Ao Vivo */}
       <Modal
         isOpen={showPodiumModal}
         onClose={() => setShowPodiumModal(false)}

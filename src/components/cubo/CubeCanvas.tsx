@@ -195,7 +195,8 @@ export const CubeCanvas = forwardRef<CubeCanvasHandle, CubeCanvasProps>(
       // Camera orbit spherical state
       const DEFAULT_THETA = Math.PI / 4;
       const DEFAULT_PHI = Math.PI / 3;
-      const radius = size === 2 ? 5.6 : 7.4;
+      const baseRadius = size === 2 ? 5.4 : 7.2;
+      let radius = baseRadius;
 
       let theta = DEFAULT_THETA;
       let phi = DEFAULT_PHI;
@@ -445,15 +446,21 @@ export const CubeCanvas = forwardRef<CubeCanvasHandle, CubeCanvasProps>(
 
       buildCube();
 
-      // Resize observer for crisp mobile responsiveness
+      // Resize observer for crisp, dead-center mobile responsiveness
       const handleResize = () => {
-        const w = Math.max(1, container.clientWidth);
-        const h = Math.max(1, container.clientHeight);
-        camera.aspect = w / h;
+        const rect = container.getBoundingClientRect();
+        const w = Math.max(1, Math.round(rect.width));
+        const h = Math.max(1, Math.round(rect.height));
+        const aspect = w / h;
+        camera.aspect = aspect;
+        // Se o ecrã for estreito (portrait), afasta suavemente a câmara para o cubo nunca ficar cortado
+        radius = aspect < 0.85 ? baseRadius * (0.85 / Math.max(0.55, aspect)) : baseRadius;
         camera.updateProjectionMatrix();
         renderer.setSize(w, h, false);
+        updateCamera();
       };
       handleResize();
+      window.requestAnimationFrame(handleResize);
       const resizeObserver = new ResizeObserver(handleResize);
       resizeObserver.observe(container);
 
@@ -677,7 +684,7 @@ export const CubeCanvas = forwardRef<CubeCanvasHandle, CubeCanvasProps>(
     return (
       <div
         ref={containerRef}
-        className="h-full w-full select-none"
+        className="absolute inset-0 h-full w-full select-none"
         aria-label={`Cubo Mágico 3D ${size}x${size}`}
       />
     );
