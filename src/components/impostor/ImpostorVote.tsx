@@ -13,9 +13,9 @@ export function ImpostorVote({ players, onAccuse }: ImpostorVoteProps) {
   const selectedPlayer = players.find((p) => p.id === selectedId) ?? null;
 
   return (
-    <div className="mx-auto flex min-h-[calc(100dvh-68px)] w-full max-w-lg flex-col px-3.5 pb-safe pt-3">
-      {/* Unified Open Voting Card */}
-      <div className="flex min-h-[340px] flex-1 flex-col rounded-[2rem] border-2 border-[#FF6B35]/45 bg-[#0F172A] px-5 py-5 shadow-2xl">
+    <div className="mx-auto flex min-h-[calc(100dvh-68px)] w-full max-w-[440px] flex-col px-3.5 pb-safe pt-3">
+      {/* Unified Open Voting Glass Card */}
+      <div className="glass-card flex min-h-[340px] flex-1 flex-col rounded-[2rem] border-2 border-[#FF6B35]/45 px-5 py-5 shadow-2xl">
         <div className="text-center">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FF6B35]/15 px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#FF6B35]">
             <Gavel className="h-3.5 w-3.5" />

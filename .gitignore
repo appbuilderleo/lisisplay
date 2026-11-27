@@ -6,6 +6,9 @@ dist/
 dist-ssr/
 *.local
 *.tsbuildinfo
+.env
+.env.*
+!.env.example
 
 # Logs
 npm-debug.log*

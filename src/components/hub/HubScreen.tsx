@@ -3,14 +3,13 @@ import {
   ArrowRight,
   BookOpen,
   Box,
-  ChevronRight,
   Flame,
   HandMetal,
   Heart,
   LayoutGrid,
   List,
+  Lock,
   Search,
-  Smartphone,
   Sparkles,
   Star,
   Timer,
@@ -29,6 +28,7 @@ interface HubScreenProps {
   onSelectGame: (game: GameId) => void;
   onOpenRules: () => void;
   onOpenGroup: () => void;
+  onOpenAdmin: () => void;
 }
 
 type CategoryFilter = 'all' | 'mimica' | 'blefe' | 'votacao' | 'puzzle' | 'rapidos';
@@ -143,6 +143,7 @@ export function HubScreen({
   onSelectGame,
   onOpenRules,
   onOpenGroup,
+  onOpenAdmin,
 }: HubScreenProps) {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState<CategoryFilter>('all');
@@ -487,30 +488,20 @@ export function HubScreen({
           </section>
         )}
 
-        {/* Pass-The-Phone Info Banner */}
-        <button
-          type="button"
-          onClick={() => {
-            sound.tap();
-            onOpenRules();
-          }}
-          className="glass-card mt-1 flex w-full items-center justify-between rounded-2xl p-3.5 text-left shadow-lg transition active:scale-[0.99] hover:border-[#00F5D4]/35"
-        >
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#00F5D4]/15 text-[#00F5D4]">
-              <Smartphone className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="font-display text-sm font-bold leading-tight text-[#F8FAFC]">
-                Como funciona a Roda?
-              </p>
-              <p className="mt-0.5 text-xs text-[#94A3B8]">
-                Apenas 1 celular passa de mão em mão — zero internet.
-              </p>
-            </div>
-          </div>
-          <ChevronRight className="h-5 w-5 shrink-0 text-[#94A3B8]" />
-        </button>
+        {/* Discrete Admin Access Footer Link */}
+        <div className="mt-2 flex items-center justify-center pb-2">
+          <button
+            type="button"
+            onClick={() => {
+              sound.tap();
+              onOpenAdmin();
+            }}
+            className="inline-flex min-h-[38px] items-center gap-1.5 rounded-full px-3 text-[11px] font-semibold text-[#94A3B8]/65 transition hover:text-[#00F5D4]"
+          >
+            <Lock className="h-3 w-3" />
+            <span>Painel de Gestão</span>
+          </button>
+        </div>
       </div>
 
       {/* Bottom Tab Bar (Menu de Jogos only — hidden during gameplay!) */}

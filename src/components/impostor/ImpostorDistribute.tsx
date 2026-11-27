@@ -46,10 +46,10 @@ export function ImpostorDistribute({
   const progressPct = ((currentIndex + (revealed ? 1 : 0.4)) / players.length) * 100;
 
   return (
-    <div className="mx-auto flex min-h-[calc(100dvh-68px)] w-full max-w-lg flex-col px-3.5 pb-safe pt-3">
-      {/* GIANT OPEN CARD: Occupies ~75% of screen with ALL text inside */}
+    <div className="mx-auto flex min-h-[calc(100dvh-68px)] w-full max-w-[440px] flex-col px-3.5 pb-safe pt-3">
+      {/* GIANT OPEN CARD: Electric Social Arcade Glassmorphism */}
       <div
-        className={`relative flex min-h-[340px] w-full flex-1 flex-col justify-between overflow-x-clip rounded-[2rem] border-2 bg-[#0F172A] px-5 py-6 text-center shadow-2xl transition-colors ${
+        className={`glass-card relative flex min-h-[340px] w-full flex-1 flex-col justify-between overflow-x-clip rounded-[2rem] border-2 px-5 py-6 text-center shadow-2xl transition-colors ${
           !revealed
             ? 'border-[#19D8F2]/40'
             : isImpostor

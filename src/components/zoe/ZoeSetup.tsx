@@ -1,6 +1,7 @@
 import { Briefcase, Check, HandMetal, PartyPopper, Play, Shuffle, Zap } from 'lucide-react';
 import { ALL_ZOE_DECK_ID, ZOE_DECKS } from '../../data/decks';
 import { sound } from '../../lib/audio';
+import { GameIntroBanner } from '../ui/GameIntroBanner';
 
 interface ZoeSetupProps {
   deckId: string;
@@ -18,9 +19,20 @@ export function ZoeSetup({ deckId, onSelectDeck, onStart }: ZoeSetupProps) {
   const totalQuestions = ZOE_DECKS.reduce((sum, d) => sum + d.questions.length, 0);
 
   return (
-    <div className="mx-auto flex min-h-[calc(100dvh-70px)] w-full max-w-lg flex-col justify-between px-4 pb-32 pt-4">
+    <div className="mx-auto flex min-h-[calc(100dvh-70px)] w-full max-w-[440px] flex-col justify-between px-4 pb-32 pt-4">
       <div className="space-y-4">
-        <div className="rounded-3xl border border-[#19D8F2]/30 bg-[#0F172A] p-5">
+        {/* Instrução do Modo Roda na tela inicial do Zoe */}
+        <GameIntroBanner
+          badge="Modo Roda · Como Jogar Zoe"
+          summary="Lê a pergunta em voz alta, conta 3-2-1 e apontem todos ao mesmo tempo!"
+          steps={[
+            'Escolhe o baralho temático que combina com o ambiente da roda.',
+            'Quem segura o celular lê a pergunta e dispara a contagem rápida 3 · 2 · 1.',
+            'Ao sinal de APONTEM!, todos apontam ao mesmo tempo — o mais votado defende-se!',
+          ]}
+        />
+
+        <div className="glass-card rounded-3xl border-[#00F5D4]/25 p-4">
           <div className="flex items-center gap-2.5">
             <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#19D8F2]/15 text-[#19D8F2]">
               <HandMetal className="h-6 w-6" />

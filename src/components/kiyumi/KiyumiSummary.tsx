@@ -49,11 +49,11 @@ export function KiyumiSummary({
   const modeLabel = record.mode === 'mimica' ? 'Mímica' : 'Descreve';
 
   return (
-    <div className="mx-auto flex min-h-[calc(100dvh-70px)] w-full max-w-lg flex-col justify-between px-4 pb-28 pt-4">
+    <div className="mx-auto flex min-h-[calc(100dvh-70px)] w-full max-w-[440px] flex-col justify-between px-4 pb-28 pt-4">
       <div className="space-y-4">
-        {/* Big Score Banner */}
+        {/* Big Score Glass Banner */}
         <section
-          className={`animate-pop-in relative rounded-3xl border-2 bg-[#0F172A] p-6 text-center shadow-2xl ${
+          className={`glass-card animate-pop-in relative rounded-3xl border-2 p-6 text-center shadow-2xl ${
             deckFinished
               ? 'border-[#00F5D4] shadow-[0_0_32px_rgba(0,245,212,0.2)]'
               : isPenalty

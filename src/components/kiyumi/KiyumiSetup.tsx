@@ -2,6 +2,7 @@ import { Check, Layers, MessageCircle, Play, Shuffle, Sparkles, User } from 'luc
 import { MIXED_WORD_DECK_ID, WORD_DECKS } from '../../data/decks';
 import { KiyumiMode } from '../../types';
 import { sound } from '../../lib/audio';
+import { GameIntroBanner } from '../ui/GameIntroBanner';
 
 interface KiyumiSetupProps {
   mode: KiyumiMode;
@@ -25,11 +26,22 @@ export function KiyumiSetup({
   onStart,
 }: KiyumiSetupProps) {
   return (
-    <div className="mx-auto flex min-h-[calc(100dvh-70px)] w-full max-w-lg flex-col justify-between px-4 pb-32 pt-4">
-      <div className="space-y-5">
+    <div className="mx-auto flex min-h-[calc(100dvh-70px)] w-full max-w-[440px] flex-col justify-between px-4 pb-32 pt-4">
+      <div className="space-y-4">
+        {/* Instrução do Modo Roda na tela inicial do Kiyumi */}
+        <GameIntroBanner
+          badge="Modo Roda · Como Jogar Kiyumi"
+          summary="1 celular na mão em rondas de 30s: acertou soma +1 e reinicia o tempo!"
+          steps={[
+            'Modo Mímica / Palco: 1 jogador vê a palavra em segredo e representa em pé com gestos.',
+            'Modo Descreve: explica por voz sem dizer nenhuma palavra escrita no ecrã.',
+            'Acertou (+1) reinicia os 30s; Passou mantém a contagem. 0 acertos = -1 ponto.',
+          ]}
+        />
+
         {/* Session stats pill if played before */}
         {roundCount > 0 && (
-          <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-[#19D8F2]/25 bg-[#0F172A] px-4 py-2.5 text-xs">
+          <div className="glass-card flex flex-wrap items-center justify-between gap-2 rounded-2xl border-[#00F5D4]/25 px-4 py-2.5 text-xs">
             <span className="font-semibold text-[#F8FAFC]/80">
               Rondas: <strong className="text-[#19D8F2]">{roundCount}</strong>
             </span>

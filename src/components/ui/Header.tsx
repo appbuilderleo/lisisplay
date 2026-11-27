@@ -61,8 +61,8 @@ export function Header({
                 </>
               ) : (
                 <>
-                  <span className="font-display block text-[11px] font-extrabold uppercase leading-none tracking-widest text-[#00F5D4]">
-                    Lisis Play
+                  <span className="font-display block whitespace-nowrap text-[11px] font-extrabold uppercase leading-none tracking-widest text-[#00F5D4]">
+                    LisisPlay
                   </span>
                   <h1 className="font-display truncate text-lg font-extrabold leading-tight tracking-tight text-[#F8FAFC]">
                     Menu de Jogos

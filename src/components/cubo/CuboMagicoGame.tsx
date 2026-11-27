@@ -405,7 +405,7 @@ export function CuboMagicoGame({ initialRoomParams }: CuboMagicoGameProps) {
           : 'Iniciar';
 
   return (
-    <div className="mx-auto flex min-h-[calc(100dvh-68px)] w-full max-w-lg flex-col px-3.5 pb-safe pt-2.5">
+    <div className="mx-auto flex min-h-[calc(100dvh-68px)] w-full max-w-[440px] flex-col px-3.5 pb-safe pt-2.5">
       {/* Contagem Sincronizada de Duelo 3-2-1 */}
       {duelCountdown?.active && (
         <CountdownOverlay

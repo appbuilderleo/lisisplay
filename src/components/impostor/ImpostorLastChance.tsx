@@ -17,9 +17,9 @@ export function ImpostorLastChance({
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
 
   return (
-    <div className="mx-auto flex min-h-[calc(100dvh-68px)] w-full max-w-lg flex-col px-3.5 pb-safe pt-3">
-      {/* Unified Open Last-Chance Card */}
-      <div className="animate-pop-in flex min-h-[340px] flex-1 flex-col justify-between rounded-[2rem] border-2 border-[#FF6B35] bg-[#0F172A] px-5 py-5 shadow-[0_0_28px_rgba(249,115,22,0.18)]">
+    <div className="mx-auto flex min-h-[calc(100dvh-68px)] w-full max-w-[440px] flex-col px-3.5 pb-safe pt-3">
+      {/* Unified Open Last-Chance Glass Card */}
+      <div className="glass-card animate-pop-in flex min-h-[340px] flex-1 flex-col justify-between rounded-[2rem] border-2 border-[#FF6B35] px-5 py-5 shadow-[0_0_28px_rgba(255,107,53,0.2)]">
         <div className="text-center">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FF6B35]/20 px-3.5 py-1 text-xs font-extrabold uppercase tracking-widest text-[#FF6B35]">
             <Flame className="h-3.5 w-3.5" />

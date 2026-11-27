@@ -13,6 +13,7 @@ import {
 import { WORD_DECKS } from '../../data/decks';
 import { ImpostorConfig } from '../../types';
 import { sound } from '../../lib/audio';
+import { GameIntroBanner } from '../ui/GameIntroBanner';
 
 export const RANDOM_IMPOSTOR_DECK_ID = 'aleatorio';
 
@@ -58,8 +59,19 @@ export function ImpostorSetup({ config, onChange, onStart }: ImpostorSetupProps)
   };
 
   return (
-    <div className="mx-auto flex min-h-[calc(100dvh-70px)] w-full max-w-lg flex-col justify-between px-4 pb-32 pt-4">
-      <div className="space-y-5">
+    <div className="mx-auto flex min-h-[calc(100dvh-70px)] w-full max-w-[440px] flex-col justify-between px-4 pb-32 pt-4">
+      <div className="space-y-4">
+        {/* Instrução do Modo Roda na tela inicial de O Impostor */}
+        <GameIntroBanner
+          badge="Modo Roda · Como Jogar O Impostor"
+          summary="O celular circula em segredo na roda: todos recebem a palavra, menos o Impostor."
+          steps={[
+            'Passa o celular por cada jogador para ver o seu papel em segredo e esconder antes de passar.',
+            'Em sentido horário, cada pessoa diz apenas 1 palavra-pista ligada ao tema.',
+            'Debatam e votem no suspeito! Se apanharem o Impostor, ele tem a Última Cartada entre 4 palavras.',
+          ]}
+        />
+
         {/* Players Section */}
         <section className="space-y-2.5">
           <div className="flex items-center justify-between px-1">

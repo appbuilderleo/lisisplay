@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { AppView, ConfirmDialogState, CubeSize, GameId, RulesTab } from './types';
 import { sound } from './lib/audio';
+import { trackGamePlay } from './lib/adminApi';
 import {
   loadFavoriteGames,
   loadSoundPreference,
@@ -17,9 +18,12 @@ import { KiyumiGame } from './components/kiyumi/KiyumiGame';
 import { ImpostorGame } from './components/impostor/ImpostorGame';
 import { ZoeGame } from './components/zoe/ZoeGame';
 
-// Code-splitting do motor 3D Three.js para manter o carregamento inicial ultra-leve
+// Code-splitting do motor 3D Three.js e do Painel de Gestão Admin
 const CuboMagicoGame = lazy(() =>
   import('./components/cubo/CuboMagicoGame').then((m) => ({ default: m.CuboMagicoGame })),
+);
+const AdminPortal = lazy(() =>
+  import('./components/admin/AdminPortal').then((m) => ({ default: m.AdminPortal })),
 );
 
 const GAME_META: Record<GameId, { title: string; subtitle: string }> = {
@@ -28,6 +32,13 @@ const GAME_META: Record<GameId, { title: string; subtitle: string }> = {
   zoe: { title: 'Zoe', subtitle: 'Quem na Roda?' },
   cubo: { title: 'Cubo Mágico', subtitle: '3D Digital · Solo & Duelo' },
 };
+
+function isAdminUrl(): boolean {
+  if (typeof window === 'undefined') return false;
+  const path = window.location.pathname.toLowerCase();
+  const params = new URLSearchParams(window.location.search);
+  return path === '/admin' || path.startsWith('/admin/') || params.get('admin') === '1';
+}
 
 function parseInitialCubeRoom(): { code: string; size?: CubeSize; seed?: string } | null {
   if (typeof window === 'undefined') return null;
@@ -42,6 +53,7 @@ function parseInitialCubeRoom(): { code: string; size?: CubeSize; seed?: string 
 
 export function App() {
   const initialCubeRoom = useMemo(() => parseInitialCubeRoom(), []);
+  const [adminMode, setAdminMode] = useState<boolean>(() => isAdminUrl());
   const [view, setView] = useState<AppView>(() => (initialCubeRoom ? 'cubo' : 'splash'));
   const [soundEnabled, setSoundEnabled] = useState<boolean>(() => loadSoundPreference());
   const [favorites, setFavorites] = useState<GameId[]>(() => loadFavoriteGames());
@@ -58,6 +70,34 @@ export function App() {
   useEffect(() => {
     saveFavoriteGames(favorites);
   }, [favorites]);
+
+  useEffect(() => {
+    const onPopState = () => {
+      setAdminMode(isAdminUrl());
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+
+  const handleOpenAdmin = () => {
+    setAdminMode(true);
+    if (window.location.pathname !== '/admin') {
+      window.history.pushState({}, '', '/admin');
+    }
+  };
+
+  const handleExitAdmin = () => {
+    setAdminMode(false);
+    setView('hub');
+    if (window.location.pathname !== '/') {
+      window.history.pushState({}, '', '/');
+    }
+  };
+
+  const handleSelectGame = (game: GameId) => {
+    trackGamePlay(game);
+    setView(game);
+  };
 
   const handleToggleSound = () => {
     const next = !soundEnabled;
@@ -110,6 +150,23 @@ export function App() {
     setView('hub');
   };
 
+  if (adminMode) {
+    return (
+      <Suspense
+        fallback={
+          <div className="flex min-h-[100dvh] flex-col items-center justify-center gap-3 bg-[#070B14] text-[#00F5D4]">
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#00F5D4]/20 border-t-[#00F5D4]" />
+            <p className="font-display text-xs font-extrabold uppercase tracking-widest">
+              A abrir Painel de Gestão...
+            </p>
+          </div>
+        }
+      >
+        <AdminPortal onExitToApp={handleExitAdmin} />
+      </Suspense>
+    );
+  }
+
   if (view === 'splash') {
     return <SplashScreen onEnter={() => setView('hub')} />;
   }
@@ -118,7 +175,15 @@ export function App() {
   const activeMeta = view !== 'hub' ? GAME_META[view] : null;
 
   return (
-    <div className="min-h-[100dvh] w-full bg-[#070B14] text-[#F8FAFC]">
+    <div className="relative min-h-[100dvh] w-full bg-[#070B14] text-[#F8FAFC]">
+      {/* Electric Social Arcade Ambient Glows across all game environments */}
+      {view !== 'hub' && (
+        <>
+          <div className="pointer-events-none fixed -top-20 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-[#00F5D4]/8 blur-[110px]" />
+          <div className="pointer-events-none fixed -right-24 bottom-12 h-64 w-64 rounded-full bg-[#FF6B35]/8 blur-[100px]" />
+        </>
+      )}
+
       <Header
         showBack={view !== 'hub'}
         showTelemetryStrip={view === 'hub'}
@@ -130,14 +195,15 @@ export function App() {
         onOpenRules={() => setRulesOpen(true)}
       />
 
-      <main className="w-full">
+      <main className="relative z-10 w-full">
         {view === 'hub' && (
           <HubScreen
             favorites={favorites}
             onToggleFavorite={handleToggleFavorite}
-            onSelectGame={(game) => setView(game)}
+            onSelectGame={handleSelectGame}
             onOpenRules={() => setRulesOpen(true)}
             onOpenGroup={() => setGroupOpen(true)}
+            onOpenAdmin={handleOpenAdmin}
           />
         )}
         {view === 'kiyumi' && <KiyumiGame onRequestConfirm={requestConfirm} />}

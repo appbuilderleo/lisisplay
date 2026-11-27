@@ -106,10 +106,10 @@ export function ZoePlay({
   }
 
   return (
-    <div className="mx-auto flex min-h-[calc(100dvh-68px)] w-full max-w-lg flex-col px-3.5 pb-safe pt-3">
-      {/* GIANT OPEN CARD: Occupies ~75% of screen; ALL text & deck progress live inside */}
+    <div className="mx-auto flex min-h-[calc(100dvh-68px)] w-full max-w-[440px] flex-col px-3.5 pb-safe pt-3">
+      {/* GIANT OPEN GLASS CARD: Electric Social Arcade */}
       <div
-        className={`relative flex min-h-[320px] w-full flex-1 flex-col justify-between overflow-x-clip rounded-[2rem] border-2 bg-[#0F172A] px-5 py-6 text-center shadow-2xl transition-colors ${
+        className={`glass-card relative flex min-h-[320px] w-full flex-1 flex-col justify-between overflow-x-clip rounded-[2rem] border-2 px-5 py-6 text-center shadow-2xl transition-colors ${
           countdown === 'go'
             ? 'border-[#00F5D4] shadow-[0_0_36px_rgba(0,229,196,0.28)]'
             : countdown !== null
