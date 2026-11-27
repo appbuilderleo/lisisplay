@@ -29,7 +29,7 @@ export const RULES_CONTENT: Record<RulesTab, RuleSection> = {
       'Escolhe um baralho cultural moçambicano e o modo vertical: Mímica / Palco ou Modo Descreve.',
       'Modo Mímica / Palco: 1 jogador vê a palavra em segredo e representa em pé com gestos enquanto o grupo tenta adivinhar em 30s.',
       'Modo Descreve: 1 jogador explica a palavra por voz com frases descritivas, sem dizer nenhuma palavra escrita no ecrã.',
-      'Cada acerto soma +1 ponto e abre logo a palavra seguinte na mão do mesmo jogador. Quando os 30s terminam, passa o celular; com 0 acertos, perde 1 ponto (-1).',
+      'Cada acerto soma +1 ponto, abre logo a palavra seguinte e reinicia o tempo para 30s! Se passares, o tempo continua a contar. Terminar com 0 acertos perde 1 ponto (-1).',
     ],
     tip: 'Mantém o som ligado: há tick nos últimos 5 segundos, som de acerto, som de passagem, alarme final e vibração háptica.',
   },

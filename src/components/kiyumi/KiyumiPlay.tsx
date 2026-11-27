@@ -30,6 +30,7 @@ export function KiyumiPlay({
   onAbort,
 }: KiyumiPlayProps) {
   const [timeLeft, setTimeLeft] = useState<number>(ROUND_SECONDS);
+  const [timerEpoch, setTimerEpoch] = useState<number>(0);
   const [paused, setPaused] = useState(false);
   const [hideWord, setHideWord] = useState(false);
   const [currentWord, setCurrentWord] = useState<string>(() => getNextWord());
@@ -51,7 +52,7 @@ export function KiyumiPlay({
   const score = results.filter((r) => r.status === 'correct').length;
   const isUrgent = timeLeft <= 5 && timeLeft > 0;
 
-  // 30 segundos exatos contínuos: cada acerto soma +1 e abre logo a palavra seguinte
+  // 30 segundos exatos: acertar reinicia para 30s; passar mantém a contagem a correr
   useEffect(() => {
     if (paused || finishedRef.current) return;
 
@@ -77,7 +78,7 @@ export function KiyumiPlay({
     }, 1000);
 
     return () => window.clearInterval(timer);
-  }, [paused, onFinish]);
+  }, [paused, onFinish, timerEpoch]);
 
   const recordAction = useCallback(
     (status: 'correct' | 'passed') => {
@@ -88,6 +89,8 @@ export function KiyumiPlay({
 
       if (status === 'correct') {
         sound.correct();
+        setTimeLeft(ROUND_SECONDS);
+        setTimerEpoch((e) => e + 1);
       } else {
         sound.pass();
       }
@@ -132,7 +135,7 @@ export function KiyumiPlay({
                   : 'bg-[#FF6B35] text-[#070B14]'
               }`}
             >
-              {feedback.type === 'correct' ? 'ACERTOU! +1' : 'PASSOU'}
+              {feedback.type === 'correct' ? 'ACERTOU! +1 · 30s' : 'PASSOU'}
             </span>
           </div>
         )}

@@ -8,7 +8,7 @@ Plataforma web progressiva (**PWA**) *mobile-first* de jogos sociais presenciais
 
 1. **Kiyumi (Mímica Rápida — 30 Segundos)**
    - **Modo Mímica / Palco** (vertical, 1 atua em segredo com gestos) e **Modo Descreve** (vertical, 1 explica por voz sem dizer palavras do ecrã).
-   - Cronómetro de 30s exatos: cada acerto soma +1 ponto e abre logo a palavra seguinte; terminar com 0 acertos penaliza -1 ponto. Alerta sonoro e háptico nos últimos 5 segundos.
+   - Cronómetro de 30s exatos: cada acerto soma +1 ponto, abre logo a palavra seguinte e reinicia os 30s; passar mantém a contagem a correr; terminar com 0 acertos penaliza -1 ponto. Alerta sonoro e háptico nos últimos 5 segundos.
 2. **O Impostor (Dedução Social — Modo Clássico)**
    - 3 a 10 jogadores editáveis, 1 ou 2 impostores (6+ jogadores), toggle de categoria opcional.
    - Distribuição anti-espreitadela, sorteio da primeira pista, cronómetro de debate (2:00 + pausar +30s), votação e **Última Cartada** (4 palavras do mesmo baralho).

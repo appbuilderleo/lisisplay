@@ -52,7 +52,7 @@ export function KiyumiSetup({
               1. Escolhe o Modo
             </span>
             <span className="rounded-full bg-[#FF6B35]/15 px-2.5 py-0.5 text-[11px] font-bold text-[#FF6B35]">
-              30 Segundos Exatos
+              30s · Reinicia ao acertar
             </span>
           </div>
 
@@ -123,8 +123,8 @@ export function KiyumiSetup({
           </div>
 
           <p className="rounded-2xl border border-[#F8FAFC]/10 bg-[#0F172A]/70 px-3.5 py-2 text-[11px] font-medium text-[#F8FAFC]/75">
-            <strong className="text-[#00F5D4]">+1 ponto</strong> por cada acerto em 30s ·{' '}
-            <strong className="text-[#FF6B35]">0 acertos = -1 ponto</strong> ao fim da ronda.
+            <strong className="text-[#00F5D4]">Acertou:</strong> +1 ponto e reinicia os 30s ·{' '}
+            <strong className="text-[#FF6B35]">Passou:</strong> tempo continua (0 acertos = -1 pt).
           </p>
         </section>
 
