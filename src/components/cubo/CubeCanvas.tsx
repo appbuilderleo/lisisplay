@@ -192,10 +192,10 @@ export const CubeCanvas = forwardRef<CubeCanvasHandle, CubeCanvasProps>(
         isUser: boolean;
       } | null = null;
 
-      // Camera orbit spherical state
+      // Camera orbit spherical state (20% menor no ecrã para mais margem de toque orbital)
       const DEFAULT_THETA = Math.PI / 4;
       const DEFAULT_PHI = Math.PI / 3;
-      const baseRadius = size === 2 ? 5.4 : 7.2;
+      const baseRadius = size === 2 ? 6.75 : 9.0;
       let radius = baseRadius;
 
       let theta = DEFAULT_THETA;
